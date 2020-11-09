@@ -1143,7 +1143,7 @@ var Scroll = Scroll || (() => {
     // 2nd Option: Fall back to calculating the elements' bottom position and use the biggest value
     if (!difference || difference <= 0) {
       console.log("calculateOffset() - no value found from the insert position's top, calculating each element's bottom position ...");
-      difference = Math.max(elements.map(e => getElementPosition(e).bottom));
+      difference = Math.max(...elements.map(e => getElementPosition(e).bottom));
     }
     // 3rd Option: OK, we fall back to using the total document height * 0.75
     if (!difference || difference <= 0) {
@@ -1151,8 +1151,8 @@ var Scroll = Scroll || (() => {
       difference = bottom * 0.75;
     }
     offset = bottom - difference;
+    console.log("calculateOffset() - the elements' max bottom position was:" + Math.max(...elements.map(e => getElementPosition(e).bottom)));
     console.log("calculateOffset() - bottom=" + bottom + ", offset=" + offset + ", insertPosition=" + insertPosition.top + ", backup bottom*0.75=" + (bottom * .75) + ", and the value chosen was=" + difference);
-    console.log("calculateOffset() - the elements' max bottom position was:" + Math.max(elements.map(e => getElementPosition(e).bottom)));
   }
 
   /**
@@ -1178,7 +1178,7 @@ var Scroll = Scroll || (() => {
     } catch(e) {
       console.log("getElementPosition() - exception caught, e=" + e);
     }
-    console.log("getElementPosition() - position.top=" + position.top);
+    console.log("getElementPosition() - position.top=" + position.top + ", position.bottom=" + position.bottom);
     return position;
   }
 
