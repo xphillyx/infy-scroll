@@ -1,0 +1,441 @@
+/**
+ * Infy Scroll
+ * @file popup.css
+ * @author Roy Six
+ * @license TBD
+ */
+
+/* Native */
+
+/* Gives us guaranteed width, worry-free. overflow-x:hidden fixes Firefox horizontal scrollbar issue. overflow-y: overlay fixes Chrome scrollbar issue with 800px width */
+html, body {
+  overflow-x: hidden !important;
+  overflow-y: overlay !important;
+}
+
+/* Controls */
+
+/* margin:8px instead of 4px to keep Firefox from displaying scrollbars and user-select: none to prevent highlighting text after clicking buttons */
+#controls {
+  margin: 8px;
+  user-select: none;
+}
+
+#controls-buttons {
+  margin-top: 0;
+}
+
+/* vertical-align: middle matches hover.css styling */
+#controls-buttons svg {
+  vertical-align: middle;
+  padding: 8px;
+  cursor: pointer;
+}
+
+#controls-buttons svg:not(:last-child) {
+  margin-right: 10px;
+}
+
+#controls-icons {
+  position: absolute;
+  top: 0;
+  right: 8px;
+}
+
+#controls-icons span {
+  font-size: 0.8em;
+}
+
+#controls-icons svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Setup */
+
+#setup {
+  margin: 0;
+  min-width: 800px;
+  min-height: 510px;
+}
+
+/* Drawer */
+
+.mdc-drawer {
+  width: 205px;
+}
+
+.mdc-drawer__header {
+  min-height: 0;
+}
+
+.mdc-drawer .mdc-list-item {
+  margin: 6px 8px;
+}
+
+.drawer-frame-root {
+  display: flex;
+}
+
+#drawer-image {
+  cursor: pointer;
+  height: 250px;
+}
+
+#drawer-extension {
+  width: 170px;
+  height: 176px;
+}
+
+#drawer-mascot {
+  position: absolute;
+  margin-left: -16px;
+  margin-top: -6px;
+}
+
+main {
+  padding: 1rem;
+  width: 100%;
+}
+
+/* mdc-snackbar */
+
+/* Don't make the snackbar so tall! */
+.mdc-snackbar--stacked .mdc-snackbar__label {
+  padding-bottom: 0;
+}
+
+/*
+!* mdc-tab *!
+
+!* Actions Tab Bar - Make width smaller so it doesn't cover Save Button Icon *!
+.mdc-tab-bar {
+  width: 50%;
+  margin-bottom: 1rem;
+}
+
+!* Make tabs smaller height so the Button and List sections remain the same height as the other sections *!
+.mdc-tab {
+  height: 36px;
+}
+*/
+
+/* Save URL */
+
+#save-url-button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+#save-title-textarea {
+  height: 32px;
+}
+
+#save-url-textarea {
+  height: 52px;
+}
+
+#save-url-text-field-container {
+  margin-top: 1rem;
+}
+
+.dialog-notice {
+  font-weight: 500;
+  color: var(--mdc-theme-primary);
+  text-align: right;
+}
+
+/* Setup */
+
+#setup svg {
+  user-select: none;
+}
+
+#setup div.column > label, label.label-display-block {
+  display: block;
+  margin-bottom: 2px;
+}
+
+#setup div.column label.label-display-inline-block {
+  display: inline-block;
+}
+
+#increment-decrement div.column:not(:last-child), #auto div.column:not(:last-child) {
+  padding-right: 24px;
+}
+
+.section {
+  margin-bottom: 1rem;
+}
+
+/* Keep action sections the same height */
+#next-prev, #increment-decrement, #button, #list {
+  min-height: 251px;
+}
+
+/* Popup buttons shorter due to smaller window */
+#popup #setup .mdc-button {
+  height: 31px;
+}
+
+header {
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Keeps the div containing the loading mdc-linear-progress indicator and the success and error responses the same height */
+.async-result {
+  height: 20px;
+}
+
+/* Restrict loading width to keep it off the Save Heart */
+.result-loading {
+  width: 95%;
+}
+
+.success-details {
+  color: var(--success-color);
+  border-bottom-color: var(--success-color);
+  font-weight: 500;
+}
+
+.error-details {
+  color: var(--error-color);
+  border-bottom-color: var(--error-color);
+  font-weight: 500;
+}
+
+.info-details {
+  color: var(--mdc-theme-primary);
+  border-bottom-color: var(--mdc-theme-primary);
+  font-weight: 500;
+}
+
+/* Next Prev */
+
+/* TODO: Keeping Keywords hidden for the time being so that they are globally used for all saved URLs */
+#next-keywords, #prev-keywords {
+  display: none;
+}
+
+/* Increment Decrement */
+
+#mouse-pointer-icon {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 1px;
+}
+
+#shuffle-urls-label {
+  color: var(--shuffle-color);
+  font-weight: 500;
+}
+
+/* Different width than in Options due to no floating label there */
+#error-skip-text-field {
+  width: 90px;
+}
+
+#base-case label:not(:last-child) {
+  margin-right: 1em;
+}
+
+/* display inline-block to remove whitespace from link */
+#base-date-format-a, #base-custom-a {
+  display: inline-block;
+}
+
+#multi-button {
+  cursor: pointer;
+}
+
+#multi-button svg {
+  vertical-align: initial;
+}
+
+#multi-button svg.disabled {
+  opacity: 0.4;
+}
+
+/* Button */
+
+/* Keeps the row from breaking on the select (alternative is to use flex-row on the row) */
+#button-method-select {
+  display: inline-block;
+}
+
+/* List */
+
+/* Scroll */
+
+#scroll {
+  margin-top: 1rem;
+}
+
+#scroll-element {
+  margin-bottom: 0.5rem;
+}
+
+.mdc-card-row {
+  margin-bottom: 1rem;
+}
+
+/* For Page Element Rule Tooltip width to be more fitting */
+#scroll-element-rule-text-field[aria-label][data-balloon-pos][data-balloon-length="medium"]:after {
+  width: 200px;
+}
+
+#scroll-element-result-details  {
+  color: var(--mdc-theme-primary);
+  border-bottom-color: var(--mdc-theme-primary);
+  font-weight: 500;
+}
+
+/* Auto */
+
+#auto {
+  margin-top: 1rem;
+}
+
+/* position:relative because the Auto Slideshow checkbox is absolutely positioned inside the header */
+#auto header {
+  color: var(--auto-color);
+  position: relative;
+}
+
+#auto header #auto-slideshow-form-field {
+  position: absolute;
+  top: -6px;
+  right: 8px;
+}
+
+#auto header #auto-slideshow-label {
+  color: var(--auto-color);
+  font-weight: 500;
+}
+
+#auto #auto-wait-badge {
+  vertical-align: bottom;
+}
+
+#auto #auto-wait-badge .checkbox label {
+  padding: 2px 0;
+}
+
+#auto div.column {
+  padding-top: 3px;
+}
+
+#auto-times-input {
+  width: 55px;
+}
+
+#auto-seconds-input {
+  width: 50px;
+}
+
+/* Buttons */
+
+#setup-buttons {
+  margin: 0 1rem 1.2rem;
+}
+
+#setup #setup-buttons #buttons > button:not(:last-child) {
+  margin-right: 24px;
+}
+
+/* This icon looks a little small compared to the other two at default width/height */
+#scripts-and-styles-button svg {
+  width: 24px;
+}
+
+/* Switches */
+
+#setup #switches {
+  margin-left: 180px;
+}
+
+#setup #switches > div:not(:last-child) {
+  margin-right: 8px;
+}
+
+#auto-switch-label {
+  color: var(--auto-color);
+}
+
+/* Styles the AUTO Switch label the way I want it to appear (not MDC-style on purpose) */
+.mdc-switch__label {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Icon Button */
+
+.icon-button {
+  display: inline-block;
+}
+
+.icon-button label, .icon-button a {
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* Messages */
+
+#messages {
+  margin: 20px;
+  width: 470px;
+}
+
+#messages-buttons {
+  margin-top: 2rem;
+}
+
+#messages-buttons .mdc-button:not(:last-child) {
+  margin-right: 1rem;
+}
+
+#page-unsupported-reason {
+  color: var(--mdc-theme-primary);
+  font-weight: 500;
+}
+
+/* SVG Fill Colors */
+
+#scroll-header-icon, #save-url-icon {
+  fill: var(--mdc-theme-primary);
+}
+
+.success-icon {
+  fill: var(--success-color);
+}
+
+.error-icon, #off-button {
+  fill: var(--error-color);
+}
+
+#auto-button, #auto-switch-icon, #auto-clock-icon, #auto-slideshow-icon, #auto-slideshow-checkbox-icon {
+  fill: var(--auto-color);
+}
+
+#shuffle-urls-icon, #shuffle-urls-checkbox-icon {
+  fill: var(--shuffle-color);
+}
+
+#database-icon {
+  fill: var(--default-color);
+}
+
+#multi-button-1 {
+  fill: var(--increment-decrement-1-color);
+}
+
+#multi-button-2 {
+  fill: var(--increment-decrement-2-color);
+}
+
+#multi-button-3 {
+  fill: var(--increment-decrement-3-color);
+}

@@ -1,0 +1,558 @@
+/**
+ * Infy Scroll
+ * @file ui.css
+ * @author Roy Six
+ * @license TBD
+ */
+
+/* Variables */
+
+:root {
+  --increment-decrement-color: #1779BA;
+  --increment-decrement-m-color: #4AACED;
+  --increment-decrement-1-color: #1779BA;
+  --increment-decrement-2-color: #004687;
+  --increment-decrement-3-color: #001354;
+  --next-prev-color: #05854D;
+  --off-color: #E6003E;
+  --auto-color: #FF6600;
+  --error-skip-color: #000000;
+  --saved-urls-color: #FF69B4;
+  --shuffle-color: #BA1F40;
+  --success-color: #05854D;
+  --error-color: #E6003E;
+  --info-color: #999999;
+  --default-color: #333333;
+  --balloon-color: #333333;
+  --infy-color: #8073AE;
+}
+
+/* Fonts */
+/* Locally include 300, 400, and 500 (latin) fonts. This is essentially equivalent to remotely doing: */
+/* <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"> */
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../lib/roboto-light.woff2') format("woff2");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../lib/roboto-regular.woff2') format("woff2");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../lib/roboto-medium.woff2') format("woff2");
+}
+
+/* Native */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 85%;
+  font-family: Roboto, 'Segoe UI', Arial, Meiryo, sans-serif;
+  background: #FFFFFF;
+  color: #000000;
+}
+
+a {
+  color: var(--infy-color);
+  font-weight: 500;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+img {
+  vertical-align: middle;
+}
+
+svg:not(.mdc-checkbox__checkmark):not(.mdc-tab__icon):not(.mdc-switch__icon):not(.mdc-fab--icon) {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+}
+
+svg:not(.mdc-checkbox__checkmark):not(.mdc-tab__icon):not(.mdc-fab--icon).smaller-icon {
+  width: 16px;
+  height: 16px;
+}
+
+textarea {
+  word-break: break-all;
+}
+
+/* Flex */
+
+.flex-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.flex-row.align-start > * {
+  align-self: start;
+}
+
+.flex-row.align-center > * {
+  align-self: center;
+}
+
+/* Table */
+
+.table {
+  display: table;
+}
+
+.table .row {
+  display: table-row;
+}
+
+.table .row .column {
+  display: table-cell;
+}
+
+.row {
+  margin-bottom: 2rem;
+}
+
+.sub-row {
+  margin-bottom: 1rem;
+}
+
+/* Float */
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.clear-both {
+  clear: both;
+}
+
+/* Display */
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+/* Classes */
+
+.button-group > button:not(last-child) {
+  margin-right: 1rem;
+}
+
+.help-title {
+  font-weight: 500;
+}
+
+.help-title-margin {
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.superscript {
+  font-size: 10px;
+  vertical-align: super;
+}
+
+/* Fade */
+
+@keyframes fade-in-opacity {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-transform {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+@keyframes fade-in-max-height {
+  from { max-height: 0; }
+  to { max-height: 1000px; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0); }
+}
+
+@keyframes fade-out-max-height {
+  from { max-height: 1000px; }
+  to { max-height: 0; }
+}
+
+.fade-in {
+  animation: fade-in-opacity 0.3s ease-out, fade-in-transform 0.3s ease-out;
+}
+
+.fade-out {
+  animation: fade-out 0.3s ease-out, fade-out-max-height 0.3s ease-out;
+}
+
+/* Generate Alert */
+/* Generates an alert box (e.g. to show error messages) using an overlay */
+/* Derived from the sample Google extension, Proxy Settings by Mike West */
+
+.overlay {
+  display: block;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 240px;
+  padding: 10px;
+  margin: -40px 0 0 -120px;
+  opacity: 0;
+  background: #333;
+  letter-spacing: .0178571429em;
+  border-radius: 5px;
+  color: rgba(255,255,255,.87);
+  font-size: .875rem;
+  line-height: 1.25rem;
+  transition: all 1.0s ease;
+  transform: scale(0);
+}
+
+.overlay ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.overlay ul li {
+  text-align: center;
+}
+
+.overlay ul.error li:first-child {
+  color: #FF4D8B;
+}
+
+.overlay-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Firefox */
+
+/* Firefox: input[type=number] Change input type number to hide spinner up/down arrows unless focused/hovered */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:hover, input[type="number"]:focus {
+  -moz-appearance: initial;
+}
+
+/* Material Design Overrides */
+
+/* mdc-button */
+
+.mdc-button {
+  text-transform: none;
+}
+
+.mdc-button svg.mdc-button__icon {
+  fill: white;
+  width: 16px;
+  height: 16px;
+}
+
+.mdc-button svg.mdc-button__icon.smaller-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* mdc-card */
+
+.mdc-card {
+  padding: 0;
+  color: initial !important;
+  width: 130px;
+  height: 100px;
+  display: inline-block;
+  user-select: none;
+}
+
+.mdc-card .mdc-list-item__graphic {
+  fill: rgba(0,0,0,.6);
+}
+
+.mdc-card.mdc-list-item--selected .mdc-list-item__graphic, .mdc-card.mdc-list-item--activated .mdc-list-item__graphic {
+  fill: var(--mdc-theme-primary);
+}
+
+.mdc-list-item .mdc-card-title svg {
+  margin-right: 4px;
+}
+
+.mdc-card-title {
+  font-weight: 500;
+  border-bottom: 1px solid #E0E0E0;
+  padding: 4px;
+}
+
+.mdc-card-subtitle {
+  font-size: 0.75rem;
+  font-style: italic;
+  padding: 4px;
+}
+
+.mdc-card-description {
+  font-size: 0.75rem;
+  padding: 0 4px;
+}
+
+/* mdc-fab */
+
+.mdc-fab {
+  background-color: var(--mdc-theme-primary);
+}
+
+.mdc-fab--mini {
+  width: 30px;
+  height: 30px;
+}
+
+.mdc-fab--mini > svg.mdc-fab--icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* mdc-list */
+
+.mdc-list {
+  padding-bottom: 0;
+}
+
+.mdc-list-item svg {
+  margin-right: 12px;
+}
+
+/* mdc-tab */
+
+.mdc-tab {
+  font-size: 12px;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.mdc-tab__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.mdc-tab-content:not(.mdc-tab-content--active) {
+  display: none;
+}
+
+.mdc-tab-content--active {
+  display: block;
+}
+
+/* mdc-dialog */
+
+.mdc-dialog__title svg:not(.mdc-checkbox__checkmark):not(.mdc-tab__icon):not(.mdc-fab--icon) {
+  vertical-align: initial;
+}
+
+/* mdc-select */
+
+/* Must specify width manually starting in MDC 6.0 */
+.mdc-select__anchor {
+  min-width: initial;
+  width: 180px;
+  height: 40px;
+}
+
+/* Adjust mdc-select label float above due to adjusting the height */
+.mdc-select--outlined .mdc-select__anchor.mdc-notched-outline--upgraded .mdc-floating-label--float-above,
+.mdc-select--outlined .mdc-select__anchor .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+  transform: translateY(-27px) scale(0.75);
+}
+
+/* Adjust dropdown icon due to changing height */
+.mdc-select__dropdown-icon {
+  bottom: 10px;
+}
+
+.mdc-select__selected-text, .mdc-list {
+  font-size: 0.8rem;
+}
+
+/* mdc-snackbar */
+
+/* Show snackbar at top to avoid it covering up buttons */
+#popup .mdc-snackbar {
+  bottom: 64px;
+}
+
+/* mdc-text-field */
+
+/* Resize and adjust label above to accommodate shorter height */
+.mdc-text-field {
+  height: 40px;
+}
+
+.mdc-text-field--outlined .mdc-floating-label--float-above {
+  top: 69%;
+}
+
+.mdc-text-field textarea, .mdc-text-field input {
+  font-size: 0.8rem;
+}
+
+.mdc-text-field--textarea .mdc-text-field__input {
+  height: 64px;
+  line-height: 1rem;
+}
+
+.mdc-text-field.mdc-text-field--textarea {
+  height: auto;
+}
+
+/* .mdc-switch */
+
+.mdc-switch__prefix {
+  display: inline-block;
+  margin-bottom: -2px;
+}
+
+.mdc-switch__label {
+  font-size: 1rem;
+  margin-right: 0.3rem;
+}
+
+.mdc-switch__icon {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 1px;
+  vertical-align: text-bottom;
+}
+
+/* Balloon */
+
+/* Don't put color on border-bottom so success and error tooltips can override this color via a class selector */
+[aria-describedby="tooltip"]:not(.tooltip-without-underline) {
+  border-bottom: 1px dotted;
+  padding-bottom: 3px;
+  width: fit-content;
+}
+
+[aria-label][data-balloon-pos]:after {
+  color: white;
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 4px;
+  max-width: 350px;
+}
+
+/* Shared Popup / Options Styling */
+
+.mascot {
+  width: 225px;
+  height: 370px;
+  z-index: 2147483647;
+}
+
+.messages-mascot {
+  vertical-align: text-top;
+  margin-right: 1rem;
+}
+
+/* mdc-select__anchor widths */
+
+#button-method-select .mdc-select__anchor {
+  width: 100px;
+}
+
+#interface-image-select .mdc-select__anchor,
+#scroll-media-type-select .mdc-select__anchor {
+  width: 125px;
+}
+
+#base-select .mdc-select__anchor {
+  width: 180px;
+}
+
+#scroll-divider-select .mdc-select__anchor {
+  width: 250px;
+}
+
+#selection-select .mdc-select__anchor {
+  width: 300px;
+}
+
+/* mdc-text-field widths */
+
+#next-selector-text-field, #next-xpath-text-field, #prev-selector-text-field, #prev-xpath-text-field, #button-rule-text-field {
+  width: 220px;
+}
+
+#next-attribute-text-field, #prev-attribute-text-field {
+  width: 100px;
+}
+
+#scroll-element-rule-text-field {
+  width: 210px;
+  margin-right: 1rem;
+}
+
+#scroll-element-insert-rule-text-field {
+  width: 130px;
+}
+
+#selection-text-field, #selection-custom-group-text-field, #selection-custom-index-text-field  {
+  width: 150px;
+}
+
+#base-date-format-text-field, #base-custom-text-field {
+  width: 180px;
+}
+
+#button-size-text-field,
+#scroll-detection-throttle-text-field, #scroll-append-threshold-pages-text-field, #scroll-append-threshold-pixels-text-field, #scroll-append-delay-text-field,
+#interval-text-field, #shuffle-limit-text-field, #error-skip-text-field, #selection-custom-flags-text-field {
+  width: 78px;
+}
+
+#database-auto-update-text-field {
+  width: 64px;
+}
+
+#button-scroll-pixels-text-field {
+  width: 118px;
+}
