@@ -16,7 +16,8 @@
 - Fixed Firefox Version's Button Controls showing a vertical scrollbar when the button size is really large (100 pixels or more) by increasing the margin around the buttons from 4px to 8px
 - Fixed false positive "ON" badge for Database URLs. This was due to not testing the validity of the URL returned from the database's nextLink rule (e.g. it could have been the same URL or an invalid URL). Now calling `NextPrev.findNextPrevURL()` to determine the validity
 - Fixed incorrect feedback on the insertion point sometimes being the last element's next sibling (this is because we were actually creating a text node when just performing the check)
-- Added a second alternative option in `Scroll.calculateOffset()` to get the bottom in Append Element mode if the insertion point returns 0 (using the min value of the elements' bottom position)
+- Added a second alternative option in `Scroll.calculateOffset()` to get the bottom in Append Element mode if the insertion point returns 0 using the max value of the elements' bottom position
+- Reworked some stats and formatting in the Debug Mode's overlay (line breaks)
 
 ## Version 0.4 (Halloween Edition)
 <b>Released on 10/31/2020</b>
@@ -38,6 +39,7 @@
 - Internal Code: Removed `Scroll.wrapFirstPage()` and refactored it into `Scroll.prepareFirstPage()` and just a basic switch statement
 - Internal Code: Now setting enabled state and other properties earlier in `Infy.buildInstance()` instead of waiting to do it in `Scroll.start()`. This avoids having to keep checking if an instance is a Saved URL or Database URL in different parts of the application
 - Internal Code: Refactored Append Element/AutoPagerize code into separate and reusable functions: `getElements(), getInsertElement(), getPageElement()`
+- Added stats in the Debug Mode's Overlay (e.g. bottom, offset)
 
 ## Version 0.3
 <b>Released on 10/13/2020</b>

@@ -261,10 +261,7 @@ var Scroll = Scroll || (() => {
     let exists = true;
     let documentHeight = -1;
     if (!instance.scrollbarExists && instance.scrollbarAppends < 10) {
-      const html = document.documentElement;
-      const body = document.body;
-      // Normally we would only care about the body clientHeight when calculating the document's height. However some websites are coded strangely where their height may not be calculated based on just that, so we look at the max from all possible height values from both the html and body
-      documentHeight = Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight);
+      documentHeight = getTotalHeight(document);
       // A scrollbar exists if the document's height is bigger than the window's height. TODO: Test this more e.g. > vs >=
       exists = documentHeight > window.innerHeight;
       // If a scrollbar exists, we will stop checking. Otherwise, we increment the appends value so we only append a max of 10 pages due to lack of scrollbar
@@ -306,10 +303,8 @@ var Scroll = Scroll || (() => {
    * @private
    */
   function scrolledNearBottomPixels() {
-    const html = document.documentElement;
-    const body = document.body;
-    // This is the complete bottom of the document. Normally we only care about the body clientHeight when calculating the total height. However, some websites are coded strangely where their height may not be calculated based on just that, so we look at the max from all possible height values from both the html and body
-    const bottom = Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight);
+    // This is the absolute bottom position (the total document's height)
+    const bottom = getTotalHeight(document);
     // This is the actual bottom we care about. In all modes except Append Element mode, it's the same as the bottom. But in Append Element mode, we need to subtract the offset from the bottom. The offset is the space from the insertion point (the bottom of the elements) to the very bottom of the document. The offset is 0 in all other modes
     const contentBottom = bottom - offset;
     // This is the current position of the scrollbar. The scroll position can also be calculated to just be window.scrollY without the window.innerHeight and this would be the TOP position of the grayed portion of the scrollbar instead of its BOTTOM position
@@ -371,10 +366,23 @@ var Scroll = Scroll || (() => {
         if (instance.scrollOverlay && overlay && overlay.children[1]) {
           overlay.children[1].textContent = "Page " + instance.currentPage + " / " + instance.totalPages;
           if (items.debugEnabled && overlay.children[2]) {
-            const html = document.documentElement;
-            const body = document.body;
-            const bottom = Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight);
-            overlay.children[2].textContent = "Debug Mode - bottom=" + bottom + ", 0.75 bottom offset=" + (bottom - (bottom * 0.75)) + ", offset=" + offset;
+            const bottom = getTotalHeight(document);
+            const bottom075 = Math.floor(bottom * 0.75);
+            const bottomOffset = bottom - offset;
+            let bottomInsert = "N/A";
+            let bottomElements = "N/A";
+            // if (instance.scrollAppend === "element") {
+            //   bottomInsert = getElementPosition(insert_).top;
+            //   bottomInsert = getElementPosition(insert_).top || (bottom - offset);
+            //   const elements = getElements(document);
+            //   bottomElements = Math.floor(Math.max(...(elements.filter(e => e.nodeType === Node.ELEMENT_NODE).map(e => getElementPosition(e).bottom))));
+            // }
+            const details = overlay.children[2];
+            details.children[1].textContent = "total bottom = " + bottom;
+            details.children[3].textContent = "offst bottom = " + bottomOffset;
+            details.children[5].textContent = "elems bottom = " + bottomElements;
+            details.children[7].textContent = "..075 bottom = " + bottom075;
+            details.children[9].textContent = "......offset = " + offset;
           }
         }
         break;
@@ -494,9 +502,11 @@ var Scroll = Scroll || (() => {
       const html = document_.documentElement;
       const body = document_.body;
       resizeMedia("iframe", body);
-      const height = Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight);
+      // Calculate the height only after resizing the media elements
+      const height = getTotalHeight(document_);
       iframe.style.height = height && height > 0 ? height + "px" : "auto";
-      html.style.overflow = body.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+      body.style.overflow = "hidden";
       appendFinally("iframe", iframe, caller);
     };
     // TODO: Show an error message on the page that infy can't use this mode. Also, error appendFinally needs different handling, don't do the first part
@@ -931,6 +941,23 @@ var Scroll = Scroll || (() => {
   }
 
   /**
+   * Gets the total height of the document in pixels. This is also known as the bottom position of the document.
+   *
+   * Normally, we would only care about the body clientHeight when calculating the document's height. However some
+   * websites are coded strangely where their height may not be calculated based on just that, so we look at the max
+   * from all six possible height values from both the html and body.
+   *
+   * @param doc the specific document whose height to calculate (iframes can have their own documents!)
+   * @returns {number} the total height of the document in pixels
+   * @private
+   */
+  function getTotalHeight(doc) {
+    const html = doc.documentElement;
+    const body = doc.body;
+    return Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight)
+  }
+
+  /**
    * Gets all elements (includes both Element and Text Nodes) via the document.createTreeWalker() function.
    *
    * @param root       the root element to walk against (e.g. document.body)
@@ -1064,13 +1091,12 @@ var Scroll = Scroll || (() => {
     let pageElement;
     if (elements && elements.length > 0) {
       // Set the pageElement to the first element node that is 1px or higher and that has a default position of static (it can't be a text or comment node in order to use getClientBoundRect in SL or to observe it in IO)
-      // pageElement = elements.filter(e => e && e.nodeType === Node.ELEMENT_NODE && Math.max(e.clientHeight, e.offsetHeight, e.scrollHeight) > 1 && window.getComputedStyle(e).getPropertyValue("position") === "static")[0];
       // Prioritize finding a position node that meets all the requirements, then use the first available height node, then the first available element node
       const elementNodes = elements.filter(e => e && e.nodeType === Node.ELEMENT_NODE);
       const heightNodes = elementNodes.filter(e => Math.max(e.clientHeight, e.offsetHeight, e.scrollHeight) > 0);
       const positionNode = heightNodes.filter(e => window.getComputedStyle(e).getPropertyValue("position") === "static")[0];
+      // TODO: Fallback to even text/comment nodes here, e.g. || elements[0] ?
       pageElement = positionNode || heightNodes[0] || elementNodes[0];
-      // || elements[0] ?
     }
     return pageElement;
   }
@@ -1120,11 +1146,11 @@ var Scroll = Scroll || (() => {
    * @private
    */
   function calculateOffset(elements) {
-    const html = document.documentElement;
-    const body = document.body;
-    const bottom = Math.max(html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight);
+    // First get the absolute bottom position (total height of the document) in pixels
+    const bottom = getTotalHeight(document);
     // Check where the insertion point is on the document and find its position. Its position (top) can then be used to calculate the offset
     let insertPosition;
+    // If the insert isn't an element, we must wrap it inside an element to calculate its position
     if (insert_ && insert_.nodeType === Node.TEXT_NODE) {
       const element = convertTextToElement(insert_);
       insertPosition = getElementPosition(element);
@@ -1136,8 +1162,6 @@ var Scroll = Scroll || (() => {
     } else {
       insertPosition = getElementPosition(insert_);
     }
-    // TODO: Use other values as backup for the difference, such as the parent element's bottom or the elements themselves?
-    // const difference = insertPosition.top && insertPosition.top > 0 ? insertPosition.top : bottom * 0.75;
     // 1st Option: Use the insertion point's top position
     let difference = insertPosition.top;
     // 2nd Option: Fall back to calculating the elements' bottom position and use the biggest value
@@ -1145,12 +1169,13 @@ var Scroll = Scroll || (() => {
       console.log("calculateOffset() - no value found from the insert position's top, calculating each element's bottom position ...");
       difference = Math.max(...(elements.filter(e => e.nodeType === Node.ELEMENT_NODE).map(e => getElementPosition(e).bottom)));
     }
-    // 3rd Option: OK, we fall back to using the total document height * 0.75
+    // 3rd Option: Fall back to using the total document height * 0.75
     if (!difference || difference <= 0) {
       console.log("calculateOffset() - no value found from any of the elements' bottom position, calculating the document's bottom * 0.75 ...");
       difference = bottom * 0.75;
     }
-    offset = bottom - difference;
+    // ceil (round up 1 pixel) just in case?
+    offset = Math.ceil(bottom - difference);
     console.log("calculateOffset() - the elements' max bottom position was:" + Math.max(...(elements.filter(e => e.nodeType === Node.ELEMENT_NODE).map(e => getElementPosition(e).bottom))));
     console.log("calculateOffset() - bottom=" + bottom + ", offset=" + offset + ", insertPosition=" + insertPosition.top + ", backup bottom*0.75=" + (bottom * .75) + ", and the value chosen was=" + difference);
   }
@@ -1302,7 +1327,7 @@ var Scroll = Scroll || (() => {
       svg.appendChild(path);
     } catch(e) {
       console.log("createInfinity() - error=" + e)
-      svg = document.createTextNode(' ');
+      svg = document.createTextNode(" ");
     }
     return svg;
   }
@@ -1333,10 +1358,15 @@ var Scroll = Scroll || (() => {
       text.textContent = "Page " + instance.currentPage + " / " + instance.totalPages;
       overlay.appendChild(text);
       if (items.debugEnabled) {
-        const text2 = document.createElement("span");
-        text2.style = "display: block; margin-top: 4px; vertical-align: middle; font-family: 'Roboto', Arial, sans-serif; font-size: 10px; font-weight: bold; font-style: normal; color: #6200ee";
-        text2.textContent = "Debug Mode - Initialized";
-        overlay.appendChild(text2);
+        const debug = document.createElement("div");
+        debug.style = "margin-top: 4px; vertical-align: middle; font-family: monospace, sans-serif; font-size: 10px; font-weight: bold; font-style: normal; color: " + COLOR;
+        debug.textContent = "Infy's Debug Mode";
+        // Debug will have 5 Lines: Bottom, Insert Bottom, Elements Bottom, 075 Bottom, Offset
+        for (let i = 0; i < 5; i++) {
+          debug.appendChild(document.createElement("br"));
+          debug.appendChild(document.createElement("span"));
+        }
+        overlay.appendChild(debug);
       }
       document.body.appendChild(overlay);
     }

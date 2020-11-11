@@ -154,7 +154,7 @@ var Popup = (() => {
       button.style.width = button.style.height = items.buttonSize + "px";
       button.addEventListener("click", clickActionButton);
     }
-    MDC.lists.get("action-list").selectedIndex = instance.scrollAction === "next" ? 0 : instance.scrollAction === "prev" ? 1 : instance.scrollAction === "increment" ? 2 : instance.scrollAction === "decrement" ? 3 : instance.scrollAction === "button" || instance.scrollAction === "list" ? 4 : -1;
+    MDC.lists.get("action-list").selectedIndex = instance.scrollAction === "next" || instance.scrollAction === "prev" ? 0 : instance.scrollAction === "increment" || instance.scrollAction === "decrement" ? 1 : instance.scrollAction === "button" ? 2 : instance.scrollAction === "list" ? 3 : -1;
     // MDC.tabBars.get("action-tab-bar").activateTab(instance.scrollAction === "list" ? 1 : 0);
     changeAction();
     // instance.scrollAppend can be "none" so need to make sure before calling click to avoid NPE
