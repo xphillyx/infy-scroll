@@ -214,6 +214,9 @@ var Action = (() => {
       updateTab(caller, instance);
     } else {
       console.log("nextPrev() - " + (result && result.url ? ("duplicate result url found:" + result.url) : " no result found"));
+      if (instance.autoEnabled) {
+        Auto.stopAutoTimer(instance, "action");
+      }
     }
     return actionPerformed;
   }
@@ -328,6 +331,9 @@ var Action = (() => {
     } catch(e) {
       console.log("button() - error:" + e);
       details.error = e.message;
+      if (instance.autoEnabled) {
+        Auto.stopAutoTimer(instance, "action");
+      }
     }
     if (caller === "popup") {
       details.found = !!element;

@@ -40,6 +40,12 @@ var Auto = (() => {
   /**
    * Stops the auto timer for the instance by doing all the necessary stopping work (convenience method).
    *
+   * This function can be called in the following callers and situations:
+   *
+   * 1. Auto.autoListener() - After Auto expires normally, like when autoTimes reaches 0
+   * 2. Action.performAction() - After the following actions fail: next, prev, button
+   * 3. Scroll.stop() - After an off action is performed, the stop() will call this
+   *
    * @param instance the instance's auto timer to stop
    * @param caller   the caller asking to stop the auto timer (to determine how to set the badge)
    * @public
@@ -47,15 +53,22 @@ var Auto = (() => {
   function stopAutoTimer(instance, caller) {
     console.log("stopAutoTimer() - stopping auto timer");
     clearAutoTimeout(instance);
+    instance.autoEnabled = false;
+    instance.autoPaused = false;
+    instance.autoTimes = instance.autoTimesOriginal;
+    Scroll.setInstance(instance);
+    if (caller === "auto" || caller === "action") {
+      chrome.runtime.sendMessage({greeting: "setBadge", badge: "on", temporary: false}, function(response) { if (chrome.runtime.lastError) {} });
+    }
     // Don't set the off badge if popup is just updating the instance (ruins auto badge if auto is re-set) or any badge setting if auto repeat is on
     // Do not update the badge if the caller is Scroll.stop(). It always updates the badge on its own whether auto is enabled or not
-    if (caller !== "stop") {
-      if (caller !== "auto" && !instance.autoRepeat) {
-        chrome.runtime.sendMessage({greeting: "setBadge", badge: "off", temporary: true}, function(response) { if (chrome.runtime.lastError) {} });
-      } else {
-        chrome.runtime.sendMessage({greeting: "setBadge", badge: "default", temporary: false}, function(response) { if (chrome.runtime.lastError) {} });
-      }
-    }
+    // if (caller !== "stop") {
+    //   if (caller !== "auto" && !instance.autoRepeat) {
+    //     chrome.runtime.sendMessage({greeting: "setBadge", badge: "off", temporary: true}, function(response) { if (chrome.runtime.lastError) {} });
+    //   } else {
+    //     chrome.runtime.sendMessage({greeting: "setBadge", badge: "default", temporary: false}, function(response) { if (chrome.runtime.lastError) {} });
+    //   }
+    // }
   }
 
   /**
@@ -188,14 +201,15 @@ var Auto = (() => {
         }
         // Auto has expired normally, return back to enabled/on state (but auto disabled). Do not proceed further to turn off instance
         else {
-          stopAutoTimer(instance, "auto");
-          instance.autoEnabled = false;
-          instance.autoPaused = false;
-          instance.autoTimes = instance.autoTimesOriginal;
-          Scroll.setInstance(instance);
-          chrome.runtime.sendMessage({greeting: "setBadge", badge: "on", temporary: false}, function(response) { if (chrome.runtime.lastError) {} });
+          stopAutoTimer(instance, "auto", "on");
+          // instance.autoEnabled = false;
+          // instance.autoPaused = false;
+          // instance.autoTimes = instance.autoTimesOriginal;
+          // Scroll.setInstance(instance);
+          // chrome.runtime.sendMessage({greeting: "setBadge", badge: "on", temporary: false}, function(response) { if (chrome.runtime.lastError) {} });
         }
         // Update the Popup in case the window is still open
+        instance = Scroll.getInstance();
         chrome.runtime.sendMessage({greeting: "updatePopupInstance", caller: "auto", action: "", instance: instance}, function(response) { if (chrome.runtime.lastError) {} });
       }
     }

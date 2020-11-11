@@ -17,7 +17,7 @@ var Background = (() => {
   // The storage default values. Note: Storage.set can only set top-level JSON objects, avoid using nested JSON objects (instead, prefix keys that should be grouped together with a label e.g. "auto")
   const STORAGE_DEFAULT_VALUES = {
     "installVersion": chrome.runtime.getManifest().version, "installDate": new Date().toJSON(), "firstRun": true, "on": true,
-    "toolbarIcon": "dark", "buttonSize": 40, "interfaceImage": "infy", "interfaceMessages": true,
+    "toolbarIcon": "dark", "buttonSize": 50, "interfaceImage": "infy", "interfaceMessages": true,
     "customScriptsEnabled": true, "resizeMediaEnabled": true, "decodeURIEnabled": false, "debugEnabled": false,
     "interval": 1, "leadingZerosPadByDetection": true, "shuffleLimit": 100, "shuffleStart": false,
     "base": 10, "baseCase": "lowercase", "baseDateFormat": "yyyy/mm/dd", "baseRoman": "latin", "baseCustom": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",

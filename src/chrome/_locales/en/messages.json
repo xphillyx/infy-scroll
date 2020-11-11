@@ -148,7 +148,7 @@
   "next_prev_url_not_right": { "message": "Not quite right? Try adjusting the rule or keywords (in Options) or switch to another action" },
   "increment_heading": { "message": "Select the part of the URL to Increment or " },
   "decrement_heading": { "message": "Decrement" },
-  "decrement_tooltip": { "message":  "To decrement, enter a negative Interval like -1"},
+  "decrement_tooltip": { "message":  "To decrement, enter a negative interval like -1"},
   "url_label": { "message": "URL" },
   "multi_button_tooltip": { "message": "Multi Incrementing - Click to increment up to 3 parts of the URL simultaneously or in ranges. See the Help Guide for more information." },
   "leading_zeros_pad_label": { "message": "Pad Leading Zeros" },

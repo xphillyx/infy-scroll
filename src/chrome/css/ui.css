@@ -519,7 +519,7 @@ input[type="number"]:hover, input[type="number"]:focus {
 /* mdc-text-field widths */
 
 #next-selector-text-field, #next-xpath-text-field, #prev-selector-text-field, #prev-xpath-text-field, #button-rule-text-field {
-  width: 220px;
+  width: 230px;
 }
 
 #next-attribute-text-field, #prev-attribute-text-field {
