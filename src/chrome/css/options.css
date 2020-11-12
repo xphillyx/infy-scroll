@@ -88,6 +88,7 @@ input[type="image"]:focus {
 
 /* May scare away the users! */
 #bugs {
+  display: none;
   position: absolute;
   bottom: 42px;
   right: 28px;
