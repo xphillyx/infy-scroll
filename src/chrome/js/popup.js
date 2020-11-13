@@ -79,6 +79,11 @@ var Popup = (() => {
     MDC.fabs.get("save-fab").listen("click", ()=> { MDC.dialogs.get("save-dialog").open(); MDC.layout(); });
     MDC.lists.get("action-list").listen("MDCList:action", changeAction);
     MDC.cards.forEach(el => el.listen("click", changeAppend));
+    MDC.chips.forEach(chip => chip.listen("MDCChip:interaction", function(e) {
+      console.log("clicked a chip! toggling to=" + e.target.dataset.toggle);
+      _.subaction = e.target.daaset.toggle;
+      changeAction();
+    }));
     // MDC.tabBars.get("action-tab-bar").listen("MDCTabBar:activated", (event) => {
     //   document.querySelector(".mdc-tab-content--active").classList.remove("mdc-tab-content--active");
     //   document.querySelectorAll(".mdc-tab-content")[event.detail.index].classList.add("mdc-tab-content--active");
@@ -226,6 +231,10 @@ var Popup = (() => {
     //   selected = MDC.tabBars.get("action-tab-bar").getTabElements_().find(el => el.classList.contains("mdc-tab--active"));
     //   action = selected && selected.dataset && selected.dataset.action ? selected.dataset.action : "next";
     // }
+    // Handle Reverse Actions (Prev and Decrement)
+    if (action === "next" || action === "prev") {
+
+    }
     _.scrollAction = action;
     DOM["#next-prev"].className = action === "next" || action === "prev" ? "display-block fade-in" : "display-none";
     DOM["#next"].className = action === "next" ? "display-block" : "display-none";

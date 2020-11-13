@@ -105,6 +105,17 @@ main {
   padding-bottom: 0;
 }
 
+/* mdc-chip */
+
+.mdc-chip {
+  font-size: 12px;
+}
+
+#next-prev svg.mdc-chip__icon--leading {
+  width: 16px;
+  height: 16px;
+}
+
 /*
 !* mdc-tab *!
 

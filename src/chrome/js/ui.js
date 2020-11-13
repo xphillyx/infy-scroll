@@ -82,6 +82,10 @@ var MDC = {
     return [el.id, new mdc.checkbox.MDCCheckbox(el)];
   })),
 
+  chips: new Map([].map.call(document.querySelectorAll('.mdc-chip'), function(el) {
+    return [el.id, new mdc.chips.MDCChip(el)];
+  })),
+
   dialogs: new Map([].map.call(document.querySelectorAll('.mdc-dialog'), function(el) {
     return [el.id, new mdc.dialog.MDCDialog(el)];
   })),

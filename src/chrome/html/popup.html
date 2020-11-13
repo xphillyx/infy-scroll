@@ -307,7 +307,7 @@
                   <label for="next-type-xpath" id="xpath-label*next" data-i18n="textContent"></label>
                 </div>
               </div>
-              <div id="next-keywords-enabled" class="sub-row">
+              <div id="next-keywords-enabled" class="flex-row">
                 <div id="next-keywords-enabled-form-field" class="mdc-form-field">
                   <div class="mdc-checkbox">
                     <input id="next-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="next"/>
@@ -319,6 +319,17 @@
                     <div class="mdc-checkbox__ripple"></div>
                   </div>
                   <label id="next-keywords-enabled-label" for="next-keywords-enabled-input" data-i18n="textContent"></label>
+                </div>
+                <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
+                  <div id="next-action-toggle-chip" class="mdc-chip" role="row" data-toggle="prev">
+                    <div class="mdc-chip__ripple"></div>
+                    <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-left"></use></svg>
+                    <span role="gridcell">
+                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+                        <span class="mdc-chip__text">Use Prev Link</span>
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
               <div id="next-keywords" class="section">
@@ -390,7 +401,7 @@
                   <label for="prev-type-xpath" id="xpath-label*prev" data-i18n="textContent"></label>
                 </div>
               </div>
-              <div id="prev-keywords-enabled" class="sub-row">
+              <div id="prev-keywords-enabled" class="flex-row">
                 <div id="prev-keywords-enabled-form-field" class="mdc-form-field">
                   <div class="mdc-checkbox">
                     <input id="prev-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="prev"/>
@@ -402,6 +413,15 @@
                     <div class="mdc-checkbox__ripple"></div>
                   </div>
                   <label id="prev-keywords-enabled-label" for="prev-keywords-enabled-input" data-i18n="textContent"></label>
+                </div>
+                <div id="prev-action-toggle-chip" class="mdc-chip" role="row">
+                  <div class="mdc-chip__ripple"></div>
+                  <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-right"></use></svg>
+                  <span role="gridcell">
+                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+                        <span class="mdc-chip__text">Next Link ...</span>
+                      </span>
+                    </span>
                 </div>
               </div>
               <div id="prev-keywords" class="section">
