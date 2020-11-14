@@ -79,9 +79,10 @@ var Popup = (() => {
     MDC.fabs.get("save-fab").listen("click", ()=> { MDC.dialogs.get("save-dialog").open(); MDC.layout(); });
     MDC.lists.get("action-list").listen("MDCList:action", changeAction);
     MDC.cards.forEach(el => el.listen("click", changeAppend));
+    // TODO:
     MDC.chips.forEach(chip => chip.listen("MDCChip:interaction", function(e) {
       console.log("clicked a chip! toggling to=" + e.target.dataset.toggle);
-      _.subaction = e.target.daaset.toggle;
+      // _.subaction = e.target.daataset.toggle;
       changeAction();
     }));
     // MDC.tabBars.get("action-tab-bar").listen("MDCTabBar:activated", (event) => {
@@ -324,7 +325,7 @@ var Popup = (() => {
             DOM["#next-prev-result-details-success"].setAttribute("aria-label", response.rule);
           } else if (response.method === "keyword") {
             DOM["#next-prev-result-details-success"].textContent = response.method + " " + response.keyword;
-            DOM["#next-prev-result-details-success"].setAttribute("aria-label", response.element + "." + (response.attribute ? response.attribute : response.type) + " " + (response.subtype));
+            DOM["#next-prev-result-details-success"].setAttribute("aria-label", response.element + "." + (response.relationship ? response.relationship + "." : "") + (response.attribute ? response.attribute : response.type) + " " + (response.subtype));
           }
           DOM["#next-prev-url-textarea"].value = response.url;
         } else {

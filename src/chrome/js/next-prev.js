@@ -162,11 +162,22 @@ var NextPrev = (() => {
           }
         }
         if (isValidURL(url, details)) {
-          parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element);
-          parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g,"").toLowerCase(), elementName, element);
+          parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "");
+          parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "");
           for (const eattribute of element.attributes) {
-            parseText(urls, keywords, "attribute", url, eattribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, eattribute.nodeName.toLowerCase());
+            parseText(urls, keywords, "attribute", url, eattribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, "", eattribute.nodeName.toLowerCase(), "");
           }
+          // TODO: Check parent element. Sometimes the anchor is wrapped inside another element (like a li) with the keyword
+          if (element && element.parentNode) {
+            const parent = element.parentNode;
+            parseText(urls, keywords, "innerText", url, parent.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "parent");
+            // TODO: Is the HTML necessary as this is the parent?
+            // parseText(urls, keywords, "innerHTML", url, parent.innerHTML.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "parent");
+            for (const pattribute of parent.attributes) {
+              parseText(urls, keywords, "attribute", url, pattribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, pattribute.nodeName.toLowerCase(), "parent");
+            }
+          }
+          // TODO: Also check other properties like background-image using window.getComputedStyle() ?
         }
       } catch (e) {
         console.log("buildURLs() - exception caught:" + e);
@@ -186,12 +197,13 @@ var NextPrev = (() => {
    * @param text        the element's attribute value, innerText, or innerHTML to parse keywords from
    * @param elementName the element's name
    * @param element     the element
-   * @param eattribute  the element attribute's node name if it's needed
+   * @param eattribute  (optional) the element attribute's node name if it's needed
+   * @param relationship the element's relationship (e.g. self is "" or parent is "parent")
    * @private
    */
-  function parseText(urls, keywords, type, url, text, elementName, element, eattribute) {
+  function parseText(urls, keywords, type, url, text, elementName, element, eattribute, relationship) {
     // Iterate over this direction's keywords and build out the urls object's maps
-    const value = { url: url, element: element, elementName: elementName, attribute: eattribute };
+    const value = { url: url, element: element, elementName: elementName, attribute: eattribute, relationship: relationship  };
     for (const keyword of keywords) {
       // Important e.g. rel="next" or rel="prev"
       if (eattribute && eattribute === "rel" && text === keyword) {
@@ -224,7 +236,7 @@ var NextPrev = (() => {
           const value = urls[type][subtype].get(keyword);
           console.log("traverseResults() - a next/prev link was found:" +  type + " - " + subtype + " - " + keyword + " - " + value.element + " - " + value.attribute + " - " + value.url);
           highlightElement(value.element, debugEnabled);
-          return { url: value.url, method: "keyword", type: type, subtype: subtype, keyword: keyword, element: value.elementName, attribute: value.attribute };
+          return { url: value.url, method: "keyword", type: type, subtype: subtype, keyword: keyword, element: value.elementName, attribute: value.attribute, relationship: value.relationship };
         }
       }
     }

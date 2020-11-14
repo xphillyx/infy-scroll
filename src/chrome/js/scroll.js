@@ -504,6 +504,7 @@ var Scroll = Scroll || (() => {
       resizeMedia("iframe", body);
       // Calculate the height only after resizing the media elements
       const height = getTotalHeight(document_);
+      // TODO: Sometimes the height is a little bit shorter because of lazily loaded image thumbnails, add an extra paremter like extraIframeHeight?
       iframe.style.height = height && height > 0 ? height + "px" : "auto";
       html.style.overflow = "hidden";
       body.style.overflow = "hidden";
@@ -778,6 +779,34 @@ var Scroll = Scroll || (() => {
   }
 
   /**
+   * Some websites have problematic styling applied to them, such as a height set to 100% with overflow set to auto.
+   * This causes issues with detecting their scroll position when more content gets appended to the DOM. This function
+   * will reset the styling to allow infinite scrolling.
+   *
+   * @private
+   */
+  function resetStyling() {
+    console.log("resetStyling()");
+    try {
+      const html = document.documentElement;
+      const body = document.body;
+      const htmlStyle = window.getComputedStyle(html);
+      const bodyStyle = window.getComputedStyle(body);
+      // If either the html or body's overflow is set to auto with a height set to 100%, this means that we won't be able to detect they're scrolling
+      if (htmlStyle.overflow === "auto") {
+        console.log("resetStyling() - setting html.style.overflow to visible");
+        html.style.overflow = "visible";
+      }
+      if (bodyStyle.overflow === "auto") {
+        console.log("resetStyling() - setting body.style.overflow to visible");
+        body.style.overflow = "visible";
+      }
+    } catch(e) {
+      console.log("resetStyling() - error ")
+    }
+  }
+
+  /**
    * Before Infy can append pages, the first page (existing page on the screen) should be prepared. This is so
    * the extension can store the initial page in the pages array and check when the user has scrolled it into view.
    * The append mode is used to determine how to prepare it. For example, in element mode, the insert_ element needs to
@@ -791,6 +820,7 @@ var Scroll = Scroll || (() => {
     switch (instance.scrollAppend) {
       case "page":
       case "iframe":
+        // TODO: Give an option for the first page to be wrapped in an iframe?
         // We choose the first page's element by picking the first one with a height > 0 px. We first look at the body's first-level children and then fall-back to walking through every element in the body
         pageElement = getPageElement([...document.body.querySelectorAll(":scope > *")]) || getPageElement(getElementsByTreeWalker(document.body, NodeFilter.SHOW_ELEMENT));
         if (!pageElement) {
@@ -1432,6 +1462,7 @@ var Scroll = Scroll || (() => {
       // TODO: Is the enabled needed because we might start via shortcuts? The Popup normally sets this to true after clicking Accept
       instance.enabled = true;
       scrollListener = throttle(scrollDetection, items.scrollDetectionThrottle);
+      resetStyling();
       createOverlay();
       createLoading();
       prepareFirstPage();
