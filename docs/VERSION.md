@@ -12,6 +12,7 @@
 - Added a way to turn off UI messages when the message appears in the Popup. Now shows OK and Don't show this again
 - Added page divider alignment option: left, center, or right alignment
 - Added icon option to display or not display the infinity icon in the page divider or overlay
+- Better Next/Prev Link finding. Now checking the element's parent and added about 5 more keywords for next/prev icons like `angle-right`
 - Fixed Firefox Version's inconsistent horizontal width in the Setup when switching actions (e.g. Next Link / Increment URL and Click Button / URL List) 
 - Fixed Firefox Version's Button Controls showing a vertical scrollbar when the button size is really large (100 pixels or more) by increasing the margin around the buttons from 4px to 8px
 - Fixed false positive "ON" badge for Database URLs. This was due to not testing the validity of the URL returned from the database's nextLink rule (e.g. it could have been the same URL or an invalid URL). Now calling `NextPrev.findNextPrevURL()` to determine the validity

@@ -37,13 +37,14 @@ var NextPrev = (() => {
     // The urls object stores the rule URL (sox: selector or xpath), attribute, innerText, and innerHTML links that were found
     const urls = {
       "sox": undefined,
-      "attribute": { "equals": new Map(), "startsWith": new Map(), "includes": new Map(), "rel": new Map() },
+      // "attribute": { "equals": new Map(), "startsWith": new Map(), "includes": new Map(), "rel": new Map() },
+      "attribute": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() },
       "innerText": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() },
       "innerHTML": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() }
     };
     // Note: the algorithm order matters, the highest priority algorithms are first when they are iterated below
     const algorithms = [
-      { "type": "attribute", "subtypes": ["rel"] },
+      // { "type": "attribute", "subtypes": ["rel"] },
       { "type": "attribute", "subtypes": ["equals"] },
       { "type": "innerText", "subtypes": ["equals"] },
       { "type": "innerHTML", "subtypes": ["equals"] },
@@ -72,7 +73,9 @@ var NextPrev = (() => {
       console.log(JSON.stringify(Object.values(urls)));
       for (const algorithm of algorithms) {
         const result = traverseURLs(urls, algorithm.type, algorithm.subtypes, keywords, debugEnabled);
-        if (result) { return result; }
+        if (result) {
+          return result;
+        }
       }
     }
     // If still haven't returned a URL, return the error
@@ -80,7 +83,7 @@ var NextPrev = (() => {
   }
 
   /**
-   * Builds the urls results object by parsing all link and anchor elements.
+   * Checks if the selector or xpath rule matches against an element's attribute (i.e. a.href).
    *
    * @param urls             the urls object stores important, attribute, innerText, and innerHTML links that were found
    * @param type             the link type to use: important, attributes or innerHTML
@@ -89,7 +92,7 @@ var NextPrev = (() => {
    * @param attribute        the next or prev css selector/xpath attribute to use
    * @param decodeURIEnabled whether to decode the URI or not
    * @param document_        the current document on the page to query
-   * @param details the details object that stores details about this action, such as error messages that were caught
+   * @param details          the details object that stores details about this action, such as error messages that were caught
    * @private
    */
   function checkRule(urls, type, selector, xpath, attribute, decodeURIEnabled, document_, details) {
@@ -137,7 +140,8 @@ var NextPrev = (() => {
   }
 
   /**
-   * Builds the urls results object by parsing all link and anchor elements.
+   * Checks the keywords against all elements with a URL (i.e. href attribute).
+   * Checks that the URL is valid and then checks the element's parent and the element itself if the keyword matches.
    *
    * @param urls             the urls object stores important, attribute, innerText, and innerHTML links that were found
    * @param keywords         the next or prev keywords list to use
@@ -162,22 +166,13 @@ var NextPrev = (() => {
           }
         }
         if (isValidURL(url, details)) {
-          parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "");
-          parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "");
-          for (const eattribute of element.attributes) {
-            parseText(urls, keywords, "attribute", url, eattribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, "", eattribute.nodeName.toLowerCase(), "");
-          }
-          // TODO: Check parent element. Sometimes the anchor is wrapped inside another element (like a li) with the keyword
+          // Check parent element. Sometimes the anchor is wrapped inside another element (like a li) with the keyword
           if (element && element.parentNode) {
-            const parent = element.parentNode;
-            parseText(urls, keywords, "innerText", url, parent.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "parent");
-            // TODO: Is the HTML necessary as this is the parent?
-            // parseText(urls, keywords, "innerHTML", url, parent.innerHTML.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, "parent");
-            for (const pattribute of parent.attributes) {
-              parseText(urls, keywords, "attribute", url, pattribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, pattribute.nodeName.toLowerCase(), "parent");
-            }
+            checkElement(urls, keywords, url, elementName, element.parentNode, "parent");
           }
-          // TODO: Also check other properties like background-image using window.getComputedStyle() ?
+          // TODO: Check element.nextSibling?
+          // Check the actual element last (after the parent) to prioritize it
+          checkElement(urls, keywords, url, elementName, element, "");
         }
       } catch (e) {
         console.log("buildURLs() - exception caught:" + e);
@@ -187,28 +182,54 @@ var NextPrev = (() => {
   }
 
   /**
-   * Parses an element's text for keywords that might indicate a next or prev link.
-   * Adds the link to the urls map if a match is found.
+   * Checks if this element matches any of the keywords. This checks the element in multiple ways, including its
+   * attribute, innerText, innerHTML.
    *
-   * @param urls        the urls object stores important, attribute, innerText, and innerHTML links that were found
-   * @param keywords    the next or prev keywords list to use
-   * @param type        the type of element text value to parse: attribute, innerText, or innerHTML
-   * @param url         the URL of the link
-   * @param text        the element's attribute value, innerText, or innerHTML to parse keywords from
-   * @param elementName the element's name
-   * @param element     the element
-   * @param eattribute  (optional) the element attribute's node name if it's needed
+   * @param urls         the urls object stores important, attribute, innerText, and innerHTML links that were found
+   * @param keywords     the next or prev keywords list to use
+   * @param url          the URL of the link
+   * @param elementName  the element's name
+   * @param element      the element
    * @param relationship the element's relationship (e.g. self is "" or parent is "parent")
    * @private
    */
-  function parseText(urls, keywords, type, url, text, elementName, element, eattribute, relationship) {
+  function checkElement(urls, keywords, url, elementName, element, relationship) {
+    // TODO: Should this check after each parseText and return immediately if it found a URL since algorithm already does this?
+    for (const attribute of element.attributes) {
+      parseText(urls, keywords, "attribute", url, attribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, "", attribute.nodeName.toLowerCase(), relationship);
+    }
+    parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, relationship);
+    // Only check the innerHTML if this is the element itself i.e. a relationship does NOT exist. We do not check parent element's innerHTML
+    if (!relationship) {
+      parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
+    }
+    // TODO: Also check other properties like background-image using window.getComputedStyle() ?
+  }
+
+  /**
+   * Parses an element's text for keywords that might indicate a next or prev link.
+   * Adds the link to the urls map if a match is found.
+   *
+   * @param urls         the urls object stores important, attribute, innerText, and innerHTML links that were found
+   * @param keywords     the next or prev keywords list to use
+   * @param type         the type of element text value to parse: attribute, innerText, or innerHTML
+   * @param url          the URL of the link
+   * @param text         the element's attribute value, innerText, or innerHTML to parse keywords from
+   * @param elementName  the element's name
+   * @param element      the element
+   * @param attribute    (optional) the element attribute's node name if it's needed
+   * @param relationship the element's relationship (e.g. self is "" or parent is "parent")
+   * @private
+   */
+  function parseText(urls, keywords, type, url, text, elementName, element, attribute, relationship) {
     // Iterate over this direction's keywords and build out the urls object's maps
-    const value = { url: url, element: element, elementName: elementName, attribute: eattribute, relationship: relationship  };
+    const value = { url: url, element: element, elementName: elementName, attribute: attribute, relationship: relationship };
     for (const keyword of keywords) {
       // Important e.g. rel="next" or rel="prev"
-      if (eattribute && eattribute === "rel" && text === keyword) {
-        urls.attribute.rel.set(keyword, value);
-      } else if (text === keyword) {
+      // if (attribute && attribute === "rel" && text === keyword) {
+      //   urls.attribute.rel.set(keyword, value);
+      // }
+      if (text === keyword) {
         urls[type].equals.set(keyword, value);
       } else if (text.startsWith(keyword)) {
         urls[type].startsWith.set(keyword, value);
