@@ -18,7 +18,7 @@ var NextPrev = (() => {
    * Finds the next or prev URL based on the CSS Selector or XPath rule. Falls back to parsing the page using common
    * next or prev keywords.
    *
-   * TODO: Parse iframes (and older frames and framesets?) nested inside the document.
+   * TODO: Parse iframes (and older frames and framesets?) nested inside the document
    *
    * @param type             the rule type can be "selector" or "xpath"
    * @param selector         the next or prev css selector rule to use
@@ -38,9 +38,9 @@ var NextPrev = (() => {
     const urls = {
       "sox": undefined,
       // "attribute": { "equals": new Map(), "startsWith": new Map(), "includes": new Map(), "rel": new Map() },
-      "attribute": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() },
-      "innerText": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() },
-      "innerHTML": { "equals": new Map(), "startsWith": new Map(), "includes": new Map() }
+      "attribute": { "equals": new Map(), "startsWith": new Map(), "endsWith": new Map(), "includes": new Map() },
+      "innerText": { "equals": new Map(), "startsWith": new Map(), "endsWith": new Map(), "includes": new Map() },
+      "innerHTML": { "equals": new Map(), "startsWith": new Map(), "endsWith": new Map(), "includes": new Map() }
     };
     // Note: the algorithm order matters, the highest priority algorithms are first when they are iterated below
     const algorithms = [
@@ -48,10 +48,10 @@ var NextPrev = (() => {
       { "type": "attribute", "subtypes": ["equals"] },
       { "type": "innerText", "subtypes": ["equals"] },
       { "type": "innerHTML", "subtypes": ["equals"] },
-      // Combined startsWith and includes for priority on keywords instead of the subtypes
-      { "type": "attribute", "subtypes": ["startsWith", "includes"] },
-      { "type": "innerText", "subtypes": ["startsWith", "includes"] },
-      { "type": "innerHTML", "subtypes": ["startsWith", "includes"] }
+      // Combined startsWith, endsWith, and includes for priority on keywords instead of the subtypes
+      { "type": "attribute", "subtypes": ["startsWith", "endsWith", "includes"] },
+      { "type": "innerText", "subtypes": ["startsWith", "endsWith", "includes"] },
+      { "type": "innerHTML", "subtypes": ["startsWith", "endsWith", "includes"] }
     ];
     // Stores the exception or error message in order to return it back to the user for feedback (e.g. invalid selector)
     const details = { error: undefined };
@@ -196,14 +196,15 @@ var NextPrev = (() => {
   function checkElement(urls, keywords, url, elementName, element, relationship) {
     // TODO: Should this check after each parseText and return immediately if it found a URL since algorithm already does this?
     for (const attribute of element.attributes) {
-      parseText(urls, keywords, "attribute", url, attribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, "", attribute.nodeName.toLowerCase(), relationship);
+      parseText(urls, keywords, "attribute", url, attribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, attribute.nodeName.toLowerCase(), relationship);
     }
     parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, relationship);
-    // Only check the innerHTML if this is the element itself i.e. a relationship does NOT exist. We do not check parent element's innerHTML
+    // Only check the innerHTML if this is the element itself i.e. a relationship does NOT exist. We do not want to check parent element's innerHTML, as that could be quite lengthy!
     if (!relationship) {
       parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
     }
-    // TODO: Also check other properties like background-image using window.getComputedStyle() ?
+    // TODO: Also check other properties like background-image using window.getComputedStyle()? However, we can't use getComputedStyle() unless the element is already in the DOM...
+    // parseText(urls, keywords, "backgroundImage", url, element.ownerDocument.defaultView.getComputedStyle(element).backgroundImage.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
   }
 
   /**
@@ -233,6 +234,8 @@ var NextPrev = (() => {
         urls[type].equals.set(keyword, value);
       } else if (text.startsWith(keyword)) {
         urls[type].startsWith.set(keyword, value);
+      } else if (text.endsWith(keyword)) {
+        urls[type].endsWith.set(keyword, value);
       } else if (text.includes(keyword)) {
         urls[type].includes.set(keyword, value);
       }
@@ -244,7 +247,7 @@ var NextPrev = (() => {
    *
    * @param urls         the urls object stores attribute, innerText, and innerHTML links that were found
    * @param type         the algorithm main type to use: attribute, innerText, or innerHTML
-   * @param subtypes     the algorithm subtypes to use: rel, equals, startsWith, includes
+   * @param subtypes     the algorithm subtypes to use: equals, startsWith, endsWith, includes
    * @param keywords     the ordered list of keywords sorted in priority
    * @param debugEnabled if debug mode is enabled (to highlight the next/prev DOM element)
    * @returns {*} the next or prev url (if found) along with the subtype and keyword that was used to find it
@@ -255,7 +258,7 @@ var NextPrev = (() => {
       for (const subtype of subtypes) {
         if (urls[type][subtype].has(keyword)) {
           const value = urls[type][subtype].get(keyword);
-          console.log("traverseResults() - a next/prev link was found:" +  type + " - " + subtype + " - " + keyword + " - " + value.element + " - " + value.attribute + " - " + value.url);
+          console.log("traverseResults() - a next/prev link was found:" +  type + " - " + subtype + " - " + keyword + " - " + value.element + " - " + value.relationship + " - " + value.attribute + " - " + value.url);
           highlightElement(value.element, debugEnabled);
           return { url: value.url, method: "keyword", type: type, subtype: subtype, keyword: keyword, element: value.elementName, attribute: value.attribute, relationship: value.relationship };
         }

@@ -169,7 +169,7 @@
   "auto_times_label": { "message": "Times"},
   "auto_seconds_label": { "message": "Seconds" },
   "auto_slideshow_label": { "message": "Slideshow" },
-  "auto_slideshow_disclaimer": { "message": "Slideshow Mode is highly experimental and may not not work perfectly due to the unpredictable nature and timing of appending a new page" },
+  "auto_slideshow_tooltip": { "message": "Slideshow Mode will have Infy slide down to each page for you automatically" },
   "auto_badge_label": { "message": "Show Times Left in Toolbar" },
   "auto_behavior_label": { "message": "Smooth Scroll" },
   "eta_label": { "message": "ETA: " },
