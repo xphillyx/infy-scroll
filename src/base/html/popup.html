@@ -320,15 +320,27 @@
                   </div>
                   <label id="next-keywords-enabled-label" for="next-keywords-enabled-input" data-i18n="textContent"></label>
                 </div>
-                <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
-                  <div id="next-action-toggle-chip" class="mdc-chip" role="row" data-toggle="prev">
-                    <div class="mdc-chip__ripple"></div>
-                    <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-left"></use></svg>
-                    <span role="gridcell">
+                <div style="position: relative;">
+                  <span style="position: absolute; margin-top: -10px; margin-left: -10px; font-size: 12px;">Link Type</span>
+                  <div class="mdc-chip-set mdc-chip-set--choice" role="grid">
+                    <div id="prev-action-toggle-chip" class="mdc-chip" role="row" data-action="prev">
+                      <div class="mdc-chip__ripple"></div>
+                      <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-left"></use></svg>
+                      <span role="gridcell">
                       <span role="button" tabindex="0" class="mdc-chip__primary-action">
-                        <span class="mdc-chip__text">Use Prev Link</span>
+                        <span class="mdc-chip__text">Prev</span>
                       </span>
                     </span>
+                    </div>
+                    <div id="next-action-toggle-chip" class="mdc-chip mdc-chip--selected" role="row" data-action="next">
+                      <div class="mdc-chip__ripple"></div>
+                      <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-right"></use></svg>
+                      <span role="gridcell">
+                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+                        <span class="mdc-chip__text">Next</span>
+                      </span>
+                    </span>
+                    </div>
                   </div>
                 </div>
               </div>

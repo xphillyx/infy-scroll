@@ -361,7 +361,7 @@
   "attribute_label": { "message": "Attribute" },
   "next_rule_label": { "message": "Next Rule" },
   "prev_rule_label": { "message": "Prev Rule" },
-  "next_keywords_enabled_label": { "message": "Look for links using the Next Keywords if the Next Rule fails" },
+  "next_keywords_enabled_label": { "message": "Look for links using Keywords if the Rule fails" },
   "prev_keywords_enabled_label": { "message": "Look for links using the Prev Keywords if the Prev Rule fails" },
   "next_keywords_label": { "message": "Next Keywords" },
   "prev_keywords_label": { "message": "Prev Keywords" },

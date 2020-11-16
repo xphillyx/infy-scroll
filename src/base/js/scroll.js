@@ -899,7 +899,7 @@ var Scroll = Scroll || (() => {
         // The divider elements' style omits display intentionally because this is variable depending on tag and tag2
         // TODO: Add a default display to tag and tag2 when not div
         const align = items.scrollDividerAlign === "left" ? "left" : items.scrollDividerAlign === "right" ? "right" : "center";
-        const style = "visibility: visible; float: none; clear: both; margin: 0 auto; text-align: " + align + "; ";
+        const style = "visibility: visible; position: initial; width: auto; height: auto; float: none; clear: both; margin: 0 auto; text-align: " + align + "; ";
         // Before we added the Page Divider Align Option, it was: const style = "visibility: visible; float: none; clear: both; text-align: center; margin: 0 auto; ";
         let tag = "div";
         let tag2 = "div";
@@ -1336,7 +1336,7 @@ var Scroll = Scroll || (() => {
       svg.setAttribute("height", height);
       svg.setAttribute("viewBox", "0 0 100 100");
       svg.setAttribute("preserveAspectRatio", "xMidYMid");
-      svg.setAttribute("style", "display: " + display + "; margin: auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial;");
+      svg.setAttribute("style", "display: " + display + "; position: initial; margin: auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial;");
       const path = document.createElementNS(ns, "path");
       path.setAttribute("fill", "none");
       path.setAttribute("stroke", COLOR);
