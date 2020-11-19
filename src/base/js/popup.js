@@ -26,7 +26,7 @@ var Popup = (() => {
    * @param timeouts the reusable timeouts object that stores all named timeouts used on this page
    */
   const DOM = {};
-  const DRAWER_MASCOT_HEIGHT = "310px";
+  const DRAWER_MASCOT_HEIGHT = "322px";
   let _;
   let instance;
   let items;
@@ -71,25 +71,18 @@ var Popup = (() => {
     DOM["#scripts-and-styles-button"].addEventListener("click", function() { MDC.dialogs.get("scripts-and-styles-dialog").open(); });
     DOM["#options-button"].addEventListener("click", function() { chrome.runtime.openOptionsPage(); });
     DOM["#options-button-2"].addEventListener("click", function() { chrome.runtime.openOptionsPage(); });
-    // DOM["#drawer-extension"].addEventListener("click", changeInterfaceImage);
-    // DOM["#drawer-mascot"].addEventListener("click", changeInterfaceImage);
-    DOM["#drawer-image"].addEventListener("click", changeInterfaceImage);
+    // DOM["#drawer-image"].addEventListener("click", changeInterfaceImage);
     // The Don't show this again button in snackbar sets the interface messages to false
     MDC.snackbars.get("popup-activated-snackbar").actionEl_.addEventListener("click", () => { chrome.storage.local.set({ "interfaceMessages": false }); });
-    MDC.fabs.get("save-fab").listen("click", ()=> { MDC.dialogs.get("save-dialog").open(); MDC.layout(); });
+    MDC.fabs.get("save-fab").listen("click", () => { MDC.dialogs.get("save-dialog").open(); MDC.layout(); });
     MDC.lists.get("action-list").listen("MDCList:action", changeAction);
     MDC.cards.forEach(el => el.listen("click", changeAppend));
-    // TODO:
-    MDC.chips.forEach(chip => chip.listen("MDCChip:interaction", function(e) {
-      console.log("clicked a chip! toggling to=" + e.target.dataset.toggle);
-      // _.subaction = e.target.daataset.toggle;
+    MDC.chips.forEach(chip => chip.listen("click", function() {
+      console.log("MDCChip:() - clicked " + this.id + ", action=" + this.dataset.action);
+      MDC.chips.get(this.id).selected = true;
+      _.scrollAction = this.dataset.action;
       changeAction();
     }));
-    // MDC.tabBars.get("action-tab-bar").listen("MDCTabBar:activated", (event) => {
-    //   document.querySelector(".mdc-tab-content--active").classList.remove("mdc-tab-content--active");
-    //   document.querySelectorAll(".mdc-tab-content")[event.detail.index].classList.add("mdc-tab-content--active");
-    //   changeAction();
-    // });
     // Next Prev
     // TODO: The input event listener isn't firing on radio changes in older versions of Chrome (60), so we need to call nextPrev on the radio changes as well
     DOM["#next-prev"].addEventListener("input", function(event) { nextPrev(event.target.dataset.action, true, false); });
@@ -103,8 +96,6 @@ var Popup = (() => {
       DOM["#prev-xpath-text-field"].style.display = event.target.value === "xpath" ? "" : "none";
       nextPrev("prev", true, false);
     });
-    DOM["#next-keywords-enabled"].addEventListener("change", function(event) { nextPrev(event.target.dataset.action, true, false); });
-    DOM["#prev-keywords-enabled"].addEventListener("change", function(event) { nextPrev(event.target.dataset.action, true, false); });
     // Increment Decrement
     DOM["#url-textarea"].addEventListener("select", selectURL);
     MDC.selects.get("base-select").listen("MDCSelect:change", () => {
@@ -131,10 +122,6 @@ var Popup = (() => {
     // Initialize popup content (1-time only)
     tabs = await Promisify.getTabs();
     items = await Promisify.getItems();
-    console.log("init() - tabs=" + JSON.stringify(tabs));
-    DOM["#drawer-extension"].style.display = items.interfaceImage === "infinity" ? "" : "none";
-    DOM["#drawer-mascot"].style.display = items.interfaceImage === "infy" ? "" : "none";
-    DOM["#drawer-image"].style.height = items.interfaceImage === "infinity" ? "auto" : DRAWER_MASCOT_HEIGHT;
     instance = await Promisify.tabsSendMessage(tabs[0].id, {greeting: "getInstance"});
     if (!instance) {
       console.log("init() - no response (instance) received from content script");
@@ -153,19 +140,9 @@ var Popup = (() => {
         return;
       }
     }
-    console.log(JSON.stringify(instance));
+    console.log("init() - tabs=" + JSON.stringify(tabs));
+    console.log("init() - instance=" + JSON.stringify(instance));
     _ = JSON.parse(JSON.stringify(instance));
-    const buttons = document.querySelectorAll("#controls-buttons svg");
-    for (const button of buttons) {
-      button.style.width = button.style.height = items.buttonSize + "px";
-      button.addEventListener("click", clickActionButton);
-    }
-    MDC.lists.get("action-list").selectedIndex = instance.scrollAction === "next" || instance.scrollAction === "prev" ? 0 : instance.scrollAction === "increment" || instance.scrollAction === "decrement" ? 1 : instance.scrollAction === "button" ? 2 : instance.scrollAction === "list" ? 3 : -1;
-    // MDC.tabBars.get("action-tab-bar").activateTab(instance.scrollAction === "list" ? 1 : 0);
-    changeAction();
-    // instance.scrollAppend can be "none" so need to make sure before calling click to avoid NPE
-    MDC.cards.get((["page", "iframe", "element", "media", "none"].includes(instance.scrollAppend) ? instance.scrollAppend : "page") + "-card").root_.click();
-    updateSetup(false, false);
     // 2 Popup Views: If enabled, show Controls. If not enabled, show Setup
     if (instance.enabled) {
       toggleView.call(DOM["#accept-button"]);
@@ -173,6 +150,22 @@ var Popup = (() => {
       // toggleView.call(DOM["#setup-button"]);
       toggleView.call(DOM["#popup"]);
     }
+    // Initialization that requires storage items
+    const buttons = document.querySelectorAll("#controls-buttons svg");
+    for (const button of buttons) {
+      button.style.width = button.style.height = items.buttonSize + "px";
+      button.addEventListener("click", clickActionButton);
+    }
+    DOM["#drawer-extension"].style.display = items.interfaceImage === "infinity" ? "" : "none";
+    DOM["#drawer-mascot"].style.display = items.interfaceImage === "infy" ? "" : "none";
+    DOM["#drawer-image"].style.height = items.interfaceImage === "infinity" ? "auto" : DRAWER_MASCOT_HEIGHT;
+    // Initialization that requires the instance
+    MDC.lists.get("action-list").selectedIndex = instance.scrollAction === "next" || instance.scrollAction === "prev" ? 0 : instance.scrollAction === "increment" || instance.scrollAction === "decrement" ? 1 : instance.scrollAction === "button" ? 2 : instance.scrollAction === "list" ? 3 : -1;
+    MDC.chips.get((instance.scrollAction === "prev" ? "prev" : "next") + "-chip").selected = true;
+    changeAction();
+    // instance.scrollAppend can be "none" so need to make sure before calling changeAppend to avoid NPE
+    changeAppend.call(MDC.cards.get((["page", "iframe", "element", "media", "none"].includes(instance.scrollAppend) ? instance.scrollAppend : "page") + "-card").root_);
+    updateSetup(false, false);
     // If Auto is on, pause Auto when Popup is first opened for convenience
     if (instance.autoEnabled && !instance.autoPaused) {
       console.log("init() - pausing auto on popup startup");
@@ -227,26 +220,20 @@ var Popup = (() => {
     // Get the selected list element and use its dataset attribute to determine the action
     let selected = MDC.lists.get("action-list").listElements.find(el => el.classList.contains("mdc-list-item--selected"));
     let action = selected && selected.dataset && selected.dataset.action ? selected.dataset.action : "next";
-    // If the selected list element is special, check the activated tab bar to determine the action instead
-    // if (action === "special") {
-    //   selected = MDC.tabBars.get("action-tab-bar").getTabElements_().find(el => el.classList.contains("mdc-tab--active"));
-    //   action = selected && selected.dataset && selected.dataset.action ? selected.dataset.action : "next";
-    // }
-    // Handle Reverse Actions (Prev and Decrement)
+    // Handle Reverse Actions (Prev and Decrement?)
     if (action === "next" || action === "prev") {
-
+      action = MDC.chips.get("prev-chip").selected ? "prev" : "next";
     }
     _.scrollAction = action;
     DOM["#next-prev"].className = action === "next" || action === "prev" ? "display-block fade-in" : "display-none";
-    DOM["#next"].className = action === "next" ? "display-block" : "display-none";
-    DOM["#prev"].className = action === "prev" ? "display-block" : "display-none";
     DOM["#increment-decrement"].className = action === "increment" || action === "decrement" ? "display-block fade-in" : "display-none";
     DOM["#scroll-append-normal"].className = action !== "button" ? "display-block fade-in" : "display-none";
     DOM["#scroll-append-none"].className = action === "button" ? "display-block fade-in" : "display-none";
-    // DOM["#special"].className = action === "button" || action === "list" ? "display-block fade-in" : "display-none";
     DOM["#button"].className = action === "button" ? "display-block fade-in" : "display-none";
     DOM["#list"].className = action === "list" ? "display-block fade-in" : "display-none";
     if (action === "next" || action === "prev") {
+      DOM["#next"].className = action === "next" ? "display-block" : "display-none";
+      DOM["#prev"].className = action === "prev" ? "display-block" : "display-none";
       DOM["#next-prev-url-label"].textContent = chrome.i18n.getMessage(action + "_url_label");
       nextPrev(action, false, true);
     } else if (action === "increment" || action === "decrement") {
@@ -265,7 +252,7 @@ var Popup = (() => {
   }
 
   /**
-   * Called when the append mode (Page, Iframe, Element, Media) is changed.
+   * Called when the append mode (Page, Iframe, Element, Media, None) is changed.
    * Changes the Setup window so that the appropriate append mode controls are in view.
    *
    * @private
@@ -307,7 +294,7 @@ var Popup = (() => {
         const xpath = DOM["#" + action + "-xpath-input"].value;
         const attribute = DOM["#" + action + "-attribute-input"].value ? DOM["#" + action + "-attribute-input"].value.split(".").filter(Boolean) : [];
         const keywordsEnabled = DOM["#" + action + "-keywords-enabled-input"].checked;
-        const keywords = DOM["#" + action + "-keywords-textarea"].value ? DOM["#" + action + "-keywords-textarea"].value.toLowerCase().split(/[,\n]/).filter(Boolean) : [];
+        const keywords = _[action + "Keywords"];
         console.log("nextPrev() - type=" + type + ", selector=" + selector + ", xpath="+ xpath + ", attribute=" + attribute + ", keywordsEnabled=" + keywordsEnabled + ", keywords=" + keywords);
         const response = await Promisify.tabsSendMessage(tabs[0].id, { greeting: "checkNextPrev", type: type, selector: selector, xpath: xpath, attribute: attribute, keywordsEnabled: keywordsEnabled, keywords: keywords });
         console.log("nextPrev() - message sent to content script, response received:");
@@ -531,13 +518,6 @@ var Popup = (() => {
     if (getInstance) {
       instance = await Promisify.tabsSendMessage(tabs[0].id, {greeting: "getInstance"});
     }
-    // TODO: These commented out lines are already happening in changeAction(); we need to either comment these out or also add a line for special actions (button list) based on the instance's scrollAction
-    // DOM["#next-prev"].className = instance.scrollAction === "next" || instance.scrollAction === "prev" ? "display-block" : "display-none";
-    // DOM["#next"].className = instance.scrollAction === "next" ? "display-block" : "display-none";
-    // DOM["#prev"].className = instance.scrollAction === "prev" ? "display-block" : "display-none";
-    // DOM["#increment-decrement"].className = instance.scrollAction === "increment" || instance.scrollAction === "decrement" ? "display-block" : "display-none";
-    // DOM["#increment-heading"].style.display = instance.scrollAction === "increment" ? "" : "none";
-    // DOM["#decrement-heading"].style.display = instance.scrollAction === "decrement" ? "" : "none";
     // Saved URL Setup
     if (instance.saveFound) {
       DOM["#save-url-input"].checked = true;
@@ -557,7 +537,6 @@ var Popup = (() => {
     DOM["#next-xpath-text-field"].style.display = instance.nextType === "xpath" ? "" : "none";
     DOM["#next-attribute-input"].value = instance.nextAttribute ? instance.nextAttribute.join(".") : "";
     DOM["#next-keywords-enabled-input"].checked = instance.nextKeywordsEnabled;
-    DOM["#next-keywords-textarea"].value = instance.nextKeywords;
     DOM["#prev-type-selector"].checked = instance.prevType === "selector";
     DOM["#prev-type-xpath"].checked = instance.prevType === "xpath";
     DOM["#prev-selector-input"].value = instance.prevSelector;
@@ -566,7 +545,6 @@ var Popup = (() => {
     DOM["#prev-xpath-text-field"].style.display = instance.prevType === "xpath" ? "" : "none";
     DOM["#prev-attribute-input"].value = instance.prevAttribute ? instance.prevAttribute.join(".") : "";
     DOM["#prev-keywords-enabled-input"].checked = instance.prevKeywordsEnabled;
-    DOM["#prev-keywords-textarea"].value = instance.prevKeywords;
     // Increment Decrement Setup
     DOM["#url-textarea"].value = instance.url;
     // TODO: Investigate why we need to set focus for the url textarea here as we are doing it already in changeAction()
@@ -741,6 +719,7 @@ var Popup = (() => {
     // Clicking Accept turns on Infy
     // Note: We will also update Scroll's items.on to be true when we send the message to setInstance() later in this function
     if (!items.on) {
+      console.log("setup() - turning infy on: items.on=true ...");
       await Promisify.setItems({"on": true});
       items.on = true;
     }
@@ -808,13 +787,11 @@ var Popup = (() => {
       _.nextAttribute = DOM["#next-attribute-input"].value ? DOM["#next-attribute-input"].value.split(".").filter(Boolean) : [];
       _.nextType = DOM["#next-type-xpath"].checked ? DOM["#next-type-xpath"].value : DOM["#next-type-selector"].value;
       _.nextKeywordsEnabled = DOM["#next-keywords-enabled-input"].checked;
-      _.nextKeywords = DOM["#next-keywords-textarea"].value ? DOM["#next-keywords-textarea"].value.toLowerCase().split(/[,\n]/).filter(Boolean) : [];
       _.prevSelector = DOM["#prev-selector-input"].value;
       _.prevXpath = DOM["#prev-xpath-input"].value;
       _.prevAttribute = DOM["#prev-attribute-input"].value ? DOM["#prev-attribute-input"].value.split(".").filter(Boolean) : [];
       _.prevType = DOM["#prev-type-xpath"].checked ? DOM["#prev-type-xpath"].value : DOM["#prev-type-selector"].value;
       _.prevKeywordsEnabled = DOM["#prev-keywords-enabled-input"].checked;
-      _.prevKeywords = DOM["#prev-keywords-textarea"].value ? DOM["#prev-keywords-textarea"].value.toLowerCase().split(/[,\n]/).filter(Boolean) : [];
       // Increment Decrement:
       _.url = _.startingURL = DOM["#url-textarea"].value;
       _.selection = _.startingSelection = DOM["#selection-input"].value;

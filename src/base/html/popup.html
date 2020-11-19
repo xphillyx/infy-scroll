@@ -65,7 +65,7 @@
                 <svg class="mdc-list-item__graphic"><use xlink:href="../lib/fontawesome.svg#solid-list-alt"></use></svg>
                 <span class="mdc-list-item__text" id="scroll-action-list-label" data-i18n="textContent"></span>
               </a>
-              <div id="drawer-image" class="mdc-drawer__header" data-i18n="title">
+              <div id="drawer-image" class="mdc-drawer__header">
                 <img id="drawer-mascot" class="mascot" src="../img/infy.png" alt="Mascot"/>
                 <svg id="drawer-extension"><use xlink:href="../lib/fontawesome.svg#solid-infinity"></use></svg>
               </div>
@@ -253,200 +253,165 @@
                 </div>
               </div>
             </div>
-            <div id="next">
-              <div id="next-rule" class="section">
-                <div id="next-selector-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="next-selector-input" spellcheck="false" data-action="next">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label id="next-rule-label*selector" for="next-selector-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <div id="next-xpath-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="next-xpath-input" spellcheck="false" data-action="next">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label id="next-rule-label*xpath" for="next-xpath-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <span>&nbsp;⚫&nbsp;</span>
-                <div id="next-attribute-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="next-attribute-input" data-action="next" spellcheck="false">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label class="mdc-floating-label mdc-floating-label--float-above" id="attribute-label*next" for="next-attribute-input" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <div id="next-type" class="mdc-form-field">
-                  <div class="mdc-radio">
-                    <input class="mdc-radio__native-control" type="radio" id="next-type-selector" name="next-type" value="selector" data-action="next">
-                    <div class="mdc-radio__background">
-                      <div class="mdc-radio__outer-circle"></div>
-                      <div class="mdc-radio__inner-circle"></div>
-                    </div>
-                    <div class="mdc-radio__ripple"></div>
-                  </div>
-                  <label for="next-type-selector" id="selector-label*next" data-i18n="textContent"></label>
-                  <div class="mdc-radio">
-                    <input class="mdc-radio__native-control" type="radio" id="next-type-xpath" name="next-type" value="xpath" data-action="next">
-                    <div class="mdc-radio__background">
-                      <div class="mdc-radio__outer-circle"></div>
-                      <div class="mdc-radio__inner-circle"></div>
-                    </div>
-                    <div class="mdc-radio__ripple"></div>
-                  </div>
-                  <label for="next-type-xpath" id="xpath-label*next" data-i18n="textContent"></label>
-                </div>
-              </div>
-              <div id="next-keywords-enabled" class="flex-row">
-                <div id="next-keywords-enabled-form-field" class="mdc-form-field">
-                  <div class="mdc-checkbox">
-                    <input id="next-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="next"/>
-                    <div class="mdc-checkbox__background">
-                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                      </svg>
-                    </div>
-                    <div class="mdc-checkbox__ripple"></div>
-                  </div>
-                  <label id="next-keywords-enabled-label" for="next-keywords-enabled-input" data-i18n="textContent"></label>
-                </div>
-                <div style="position: relative;">
-                  <span style="position: absolute; margin-top: -10px; margin-left: -10px; font-size: 12px;">Link Type</span>
-                  <div class="mdc-chip-set mdc-chip-set--choice" role="grid">
-                    <div id="prev-action-toggle-chip" class="mdc-chip" role="row" data-action="prev">
-                      <div class="mdc-chip__ripple"></div>
-                      <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-left"></use></svg>
-                      <span role="gridcell">
-                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
-                        <span class="mdc-chip__text">Prev</span>
-                      </span>
-                    </span>
-                    </div>
-                    <div id="next-action-toggle-chip" class="mdc-chip mdc-chip--selected" role="row" data-action="next">
-                      <div class="mdc-chip__ripple"></div>
-                      <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-right"></use></svg>
-                      <span role="gridcell">
-                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
-                        <span class="mdc-chip__text">Next</span>
-                      </span>
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id="next-keywords" class="section">
-                  <div class="text-field-container">
-                    <div id="next-keywords-text-field" class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--textarea">
-                      <textarea id="next-keywords-textarea" class="mdc-text-field__input" spellcheck="false" data-action="next"></textarea>
-                      <div class="mdc-notched-outline mdc-notched-outline--upgraded mdc-notched-outline--notched">
-                        <div class="mdc-notched-outline__leading"></div>
-                        <div class="mdc-notched-outline__notch">
-                          <label class="mdc-floating-label mdc-floating-label--float-above" id="next-keywords-label" for="next-keywords-textarea" data-i18n="textContent"></label>
-                        </div>
-                        <div class="mdc-notched-outline__trailing"></div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-            <div id="prev">
-              <div id="prev-rule" class="section">
-                <div id="prev-selector-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="prev-selector-input" spellcheck="false" data-action="prev">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label id="prev-rule-label*selector" for="prev-selector-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <div id="prev-xpath-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="prev-xpath-input" spellcheck="false" data-action="prev">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label id="prev-rule-label*xpath" for="prev-xpath-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <span>&nbsp;⚫&nbsp;</span>
-                <div id="prev-attribute-text-field" class="mdc-text-field mdc-text-field--outlined">
-                  <input class="mdc-text-field__input" id="prev-attribute-input" data-action="prev" spellcheck="false">
-                  <div class="mdc-notched-outline">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <label class="mdc-floating-label mdc-floating-label--float-above" id="attribute-label*prev" for="prev-attribute-input" data-i18n="textContent"></label>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
-                </div>
-                <div id="prev-type" class="mdc-form-field">
-                  <div class="mdc-radio">
-                    <input class="mdc-radio__native-control" type="radio" id="prev-type-selector" name="prev-type" value="selector" data-action="prev">
-                    <div class="mdc-radio__background">
-                      <div class="mdc-radio__outer-circle"></div>
-                      <div class="mdc-radio__inner-circle"></div>
-                    </div>
-                    <div class="mdc-radio__ripple"></div>
-                  </div>
-                  <label for="prev-type-selector" id="selector-label*prev" data-i18n="textContent"></label>
-                  <div class="mdc-radio">
-                    <input class="mdc-radio__native-control" type="radio" id="prev-type-xpath" name="prev-type" value="xpath" data-action="prev">
-                    <div class="mdc-radio__background">
-                      <div class="mdc-radio__outer-circle"></div>
-                      <div class="mdc-radio__inner-circle"></div>
-                    </div>
-                    <div class="mdc-radio__ripple"></div>
-                  </div>
-                  <label for="prev-type-xpath" id="xpath-label*prev" data-i18n="textContent"></label>
-                </div>
-              </div>
-              <div id="prev-keywords-enabled" class="flex-row">
-                <div id="prev-keywords-enabled-form-field" class="mdc-form-field">
-                  <div class="mdc-checkbox">
-                    <input id="prev-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="prev"/>
-                    <div class="mdc-checkbox__background">
-                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                      </svg>
-                    </div>
-                    <div class="mdc-checkbox__ripple"></div>
-                  </div>
-                  <label id="prev-keywords-enabled-label" for="prev-keywords-enabled-input" data-i18n="textContent"></label>
-                </div>
-                <div id="prev-action-toggle-chip" class="mdc-chip" role="row">
-                  <div class="mdc-chip__ripple"></div>
-                  <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-chevron-circle-right"></use></svg>
-                  <span role="gridcell">
-                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
-                        <span class="mdc-chip__text">Next Link ...</span>
-                      </span>
-                    </span>
-                </div>
-              </div>
-              <div id="prev-keywords" class="section">
-                <div class="text-field-container">
-                  <div id="prev-keywords-text-field" class="mdc-text-field mdc-text-field--fullwidth mdc-text-field--textarea">
-                    <textarea id="prev-keywords-textarea" class="mdc-text-field__input" spellcheck="false" data-action="prev"></textarea>
-                    <div class="mdc-notched-outline mdc-notched-outline--upgraded mdc-notched-outline--notched">
+            <div id="next-prev-inputs">
+              <div id="next">
+                <div id="next-rule" class="section">
+                  <div id="next-selector-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="next-selector-input" spellcheck="false" data-action="next">
+                    <div class="mdc-notched-outline">
                       <div class="mdc-notched-outline__leading"></div>
                       <div class="mdc-notched-outline__notch">
-                        <label class="mdc-floating-label mdc-floating-label--float-above" id="prev-keywords-label" for="prev-keywords-textarea" data-i18n="textContent"></label>
+                        <label id="next-rule-label*selector" for="next-selector-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
                       </div>
                       <div class="mdc-notched-outline__trailing"></div>
                     </div>
+                  </div>
+                  <div id="next-xpath-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="next-xpath-input" spellcheck="false" data-action="next">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label id="next-rule-label*xpath" for="next-xpath-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
+                  <span>&nbsp;⚫&nbsp;</span>
+                  <div id="next-attribute-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="next-attribute-input" data-action="next" spellcheck="false">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label mdc-floating-label--float-above" id="attribute-label*next" for="next-attribute-input" data-i18n="textContent"></label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
+                  <div id="next-type" class="mdc-form-field">
+                    <div class="mdc-radio">
+                      <input class="mdc-radio__native-control" type="radio" id="next-type-selector" name="next-type" value="selector" data-action="next">
+                      <div class="mdc-radio__background">
+                        <div class="mdc-radio__outer-circle"></div>
+                        <div class="mdc-radio__inner-circle"></div>
+                      </div>
+                      <div class="mdc-radio__ripple"></div>
+                    </div>
+                    <label for="next-type-selector" id="selector-label*next" data-i18n="textContent"></label>
+                    <div class="mdc-radio">
+                      <input class="mdc-radio__native-control" type="radio" id="next-type-xpath" name="next-type" value="xpath" data-action="next">
+                      <div class="mdc-radio__background">
+                        <div class="mdc-radio__outer-circle"></div>
+                        <div class="mdc-radio__inner-circle"></div>
+                      </div>
+                      <div class="mdc-radio__ripple"></div>
+                    </div>
+                    <label for="next-type-xpath" id="xpath-label*next" data-i18n="textContent"></label>
+                  </div>
+                </div>
+                <div id="next-keywords-enabled" class="flex-row">
+                  <div id="next-keywords-enabled-form-field" class="mdc-form-field">
+                    <div class="mdc-checkbox">
+                      <input id="next-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="next"/>
+                      <div class="mdc-checkbox__background">
+                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                          <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                        </svg>
+                      </div>
+                      <div class="mdc-checkbox__ripple"></div>
+                    </div>
+                    <label id="next-keywords-enabled-label" for="next-keywords-enabled-input" data-i18n="textContent"></label>
+                  </div>
+                </div>
+              </div>
+              <div id="prev">
+                <div id="prev-rule" class="section">
+                  <div id="prev-selector-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="prev-selector-input" spellcheck="false" data-action="prev">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label id="prev-rule-label*selector" for="prev-selector-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
+                  <div id="prev-xpath-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="prev-xpath-input" spellcheck="false" data-action="prev">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label id="prev-rule-label*xpath" for="prev-xpath-input" class="mdc-floating-label mdc-floating-label--float-above" data-i18n="textContent"></label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
+                  <span>&nbsp;⚫&nbsp;</span>
+                  <div id="prev-attribute-text-field" class="mdc-text-field mdc-text-field--outlined">
+                    <input class="mdc-text-field__input" id="prev-attribute-input" data-action="prev" spellcheck="false">
+                    <div class="mdc-notched-outline">
+                      <div class="mdc-notched-outline__leading"></div>
+                      <div class="mdc-notched-outline__notch">
+                        <label class="mdc-floating-label mdc-floating-label--float-above" id="attribute-label*prev" for="prev-attribute-input" data-i18n="textContent"></label>
+                      </div>
+                      <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                  </div>
+                  <div id="prev-type" class="mdc-form-field">
+                    <div class="mdc-radio">
+                      <input class="mdc-radio__native-control" type="radio" id="prev-type-selector" name="prev-type" value="selector" data-action="prev">
+                      <div class="mdc-radio__background">
+                        <div class="mdc-radio__outer-circle"></div>
+                        <div class="mdc-radio__inner-circle"></div>
+                      </div>
+                      <div class="mdc-radio__ripple"></div>
+                    </div>
+                    <label for="prev-type-selector" id="selector-label*prev" data-i18n="textContent"></label>
+                    <div class="mdc-radio">
+                      <input class="mdc-radio__native-control" type="radio" id="prev-type-xpath" name="prev-type" value="xpath" data-action="prev">
+                      <div class="mdc-radio__background">
+                        <div class="mdc-radio__outer-circle"></div>
+                        <div class="mdc-radio__inner-circle"></div>
+                      </div>
+                      <div class="mdc-radio__ripple"></div>
+                    </div>
+                    <label for="prev-type-xpath" id="xpath-label*prev" data-i18n="textContent"></label>
+                  </div>
+                </div>
+                <div id="prev-keywords-enabled" class="flex-row">
+                  <div id="prev-keywords-enabled-form-field" class="mdc-form-field">
+                    <div class="mdc-checkbox">
+                      <input id="prev-keywords-enabled-input" type="checkbox" class="mdc-checkbox__native-control" data-action="prev"/>
+                      <div class="mdc-checkbox__background">
+                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                          <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                        </svg>
+                      </div>
+                      <div class="mdc-checkbox__ripple"></div>
+                    </div>
+                    <label id="prev-keywords-enabled-label" for="prev-keywords-enabled-input" data-i18n="textContent"></label>
+                  </div>
+                </div>
+              </div>
+              <div id="next-prev-link-type">
+                <label id="next-prev-chip-set-label" data-i18n="textContent">Link Type</label>
+                <div id="next-prev-chip-set" class="mdc-chip-set mdc-chip-set--choice" role="grid">
+                  <div id="prev-chip" class="mdc-chip" role="row" data-action="prev">
+                    <div class="mdc-chip__ripple"></div>
+                    <svg class="mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-check-circle"></use></svg>
+                    <span role="gridcell">
+                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+                        <span id="prev-label*prev-chip" data-i18n="textContent" class="mdc-chip__text"></span>
+                      </span>
+                    </span>
+                  </div>
+                  <div id="next-chip" class="mdc-chip" role="row" data-action="next">
+                    <div class="mdc-chip__ripple"></div>
+                    <svg class="material-icons mdc-chip__icon mdc-chip__icon--leading"><use xlink:href="../lib/fontawesome.svg#solid-check-circle"></use></svg>
+                    <span role="gridcell">
+                      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+                        <span id="next-label*next-chip" data-i18n="textContent" class="mdc-chip__text"></span>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -683,11 +648,6 @@
             </div>
           </section>
           <section id="button">
-            <header>
-              <svg><use xlink:href="../lib/fontawesome.svg#solid-dot-circle"></use></svg>
-              Click Button (TODO)
-            </header>
-            <p id="button-details" data-i18n="textContent"></p>
             <header id="button-result" class="async-result">
               <div id="button-result-loading" class="result-loading">
                 <span id="loading-message*button" data-i18n="textContent"></span>
@@ -782,6 +742,7 @@
                 <span id="scroll-append-threshold-pixels-bottom-label*button" data-i18n="textContent"></span>
               </div>
             </div>
+            <p id="button-details" data-i18n="textContent"></p>
           </section>
           <section id="list">
             <header>

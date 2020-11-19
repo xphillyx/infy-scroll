@@ -413,6 +413,21 @@ input[type="number"]:hover, input[type="number"]:focus {
   font-size: 0.8rem;
 }
 
+/* mdc-chip */
+
+.mdc-chip {
+  font-size: 12px;
+}
+
+.mdc-chip:not(.mdc-chip--selected) svg.mdc-chip__icon {
+  visibility: hidden;
+}
+
+.mdc-chip.mdc-chip--selected svg.mdc-chip__icon {
+  visibility: initial;
+  fill: var(--mdc-theme-primary);
+}
+
 /* mdc-snackbar */
 
 /* Show snackbar at top to avoid it covering up buttons */
@@ -483,8 +498,7 @@ input[type="number"]:hover, input[type="number"]:focus {
 /* Shared Popup / Options Styling */
 
 .mascot {
-  width: 225px;
-  height: 370px;
+  height: 390px;
   z-index: 2147483647;
 }
 

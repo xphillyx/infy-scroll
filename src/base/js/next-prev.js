@@ -170,6 +170,10 @@ var NextPrev = (() => {
           if (element && element.parentNode) {
             checkElement(urls, keywords, url, elementName, element.parentNode, "parent");
           }
+          // Check children (innerHTML)
+          // if (element && element.children && element.children.length > 0) {
+          //   checkChildElements(urls, keywords, url, elementName, element.children, 1);
+          // }
           // TODO: Check element.nextSibling?
           // Check the actual element last (after the parent) to prioritize it
           checkElement(urls, keywords, url, elementName, element, "");
@@ -177,6 +181,28 @@ var NextPrev = (() => {
       } catch (e) {
         console.log("buildURLs() - exception caught:" + e);
         details.error = e.message;
+      }
+    }
+  }
+
+  /**
+   * Checks if this element matches any of the keywords. This checks the element in multiple ways, including its
+   * attribute, innerText, innerHTML.
+   *
+   * @param urls        the urls object stores important, attribute, innerText, and innerHTML links that were found
+   * @param keywords    the next or prev keywords list to use
+   * @param url         the URL of the link
+   * @param elementName the element's name
+   * @param children    the element
+   * @param level       the children level, e.g. first-level children, second-level children, ... up to 5
+   * @private
+   */
+  function checkChildElements(urls, keywords, url, elementName, children, level) {
+    console.log("checkChildElements() - elementName=" + elementName + " children.length=" + (children ? children.length : "undefined")  + ", level=" + level);
+    for (const child of children) {
+      checkElement(urls, keywords, url, elementName, child, "child");
+      if (child && child.children && child.children.length > 0 && level < 5000) {
+        checkChildElements(urls, keywords, url, elementName, child.children, level + 1);
       }
     }
   }
@@ -194,17 +220,23 @@ var NextPrev = (() => {
    * @private
    */
   function checkElement(urls, keywords, url, elementName, element, relationship) {
-    // TODO: Should this check after each parseText and return immediately if it found a URL since algorithm already does this?
-    for (const attribute of element.attributes) {
-      parseText(urls, keywords, "attribute", url, attribute.nodeValue.replace(/\s/g,"").toLowerCase(), elementName, element, attribute.nodeName.toLowerCase(), relationship);
+    if (element) {
+      // TODO: Should this check after each parseText and return immediately if it found a URL since algorithm already does this?
+      for (const attribute of element.attributes) {
+        if (attribute && attribute.nodeValue && attribute.nodeName) {
+          parseText(urls, keywords, "attribute", url, attribute.nodeValue.replace(/\s/g, "").toLowerCase(), elementName, element, attribute.nodeName.toLowerCase(), relationship);
+        }
+      }
+      if (element.innerText) {
+        parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
+      }
+      // Only check the innerHTML if this is the element itself i.e. a relationship does NOT exist. We do not want to check parent element's innerHTML, as that could be quite lengthy!
+      // if (!relationship) {
+      //   parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
+      // }
+      // TODO: Also check other properties like background-image using window.getComputedStyle()? However, we can't use getComputedStyle() unless the element is already in the DOM...
+      // parseText(urls, keywords, "backgroundImage", url, element.ownerDocument.defaultView.getComputedStyle(element).backgroundImage.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
     }
-    parseText(urls, keywords, "innerText", url, element.innerText.replace(/\s/g,"").toLowerCase(), elementName, element, undefined, relationship);
-    // Only check the innerHTML if this is the element itself i.e. a relationship does NOT exist. We do not want to check parent element's innerHTML, as that could be quite lengthy!
-    if (!relationship) {
-      parseText(urls, keywords, "innerHTML", url, element.innerHTML.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
-    }
-    // TODO: Also check other properties like background-image using window.getComputedStyle()? However, we can't use getComputedStyle() unless the element is already in the DOM...
-    // parseText(urls, keywords, "backgroundImage", url, element.ownerDocument.defaultView.getComputedStyle(element).backgroundImage.replace(/\s/g, "").toLowerCase(), elementName, element, undefined, relationship);
   }
 
   /**
@@ -223,13 +255,11 @@ var NextPrev = (() => {
    * @private
    */
   function parseText(urls, keywords, type, url, text, elementName, element, attribute, relationship) {
-    // Iterate over this direction's keywords and build out the urls object's maps
     const value = { url: url, element: element, elementName: elementName, attribute: attribute, relationship: relationship };
     for (const keyword of keywords) {
-      // Important e.g. rel="next" or rel="prev"
-      // if (attribute && attribute === "rel" && text === keyword) {
-      //   urls.attribute.rel.set(keyword, value);
-      // }
+      // TODO: Exclude Certain types and keywords
+      // TODO: next: text.endsWith(keyword) && type !== "innerHTML" && keyword !== ">"
+      // TODO: prev: && keyword !== "<" && type !== "innerHTML"
       if (text === keyword) {
         urls[type].equals.set(keyword, value);
       } else if (text.startsWith(keyword)) {
@@ -283,6 +313,24 @@ var NextPrev = (() => {
     } catch (e) {
       console.log("isValidURL() - exception caught: " + e);
       details.error = e.message;
+    }
+    return valid;
+  }
+
+  function isValidExtension(url, details) {
+    let valid = true;
+    try {
+      const filenameAndExtension = url.split('#').shift().split('?').shift().split('/').pop();
+      if (filenameAndExtension.includes(".")) {
+        const extension = filenameAndExtension.toLowerCase().split('.').pop();
+        console.log("isValidExtension() - extension=" + extension);
+        if (extension === "css" || extension === "js") {
+          valid = false;
+          details.error = "invalid extension:" + extension;
+        }
+      }
+    } catch(e) {
+      console.log("isValidExtension() - exception caught: " + e);
     }
     return valid;
   }

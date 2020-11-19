@@ -63,7 +63,7 @@ html, body {
 /* Drawer */
 
 .mdc-drawer {
-  width: 205px;
+  width: 215px;
 }
 
 .mdc-drawer__header {
@@ -71,7 +71,7 @@ html, body {
 }
 
 .mdc-drawer .mdc-list-item {
-  margin: 6px 8px;
+  margin: 3px 8px;
 }
 
 .drawer-frame-root {
@@ -79,8 +79,7 @@ html, body {
 }
 
 #drawer-image {
-  cursor: pointer;
-  height: 250px;
+  height: 273px;
 }
 
 #drawer-extension {
@@ -91,7 +90,7 @@ html, body {
 #drawer-mascot {
   position: absolute;
   margin-left: -16px;
-  margin-top: -6px;
+  margin-top: -14px;
 }
 
 main {
@@ -108,29 +107,22 @@ main {
 
 /* mdc-chip */
 
-.mdc-chip {
+#next-prev-inputs {
+  position: relative;
+}
+
+#next-prev-link-type {
+  position: absolute;
+  bottom: -10px;
+  right: 0;
   font-size: 12px;
+  font-weight: 500;
 }
 
 #next-prev svg.mdc-chip__icon--leading {
   width: 16px;
   height: 16px;
 }
-
-/*
-!* mdc-tab *!
-
-!* Actions Tab Bar - Make width smaller so it doesn't cover Save Button Icon *!
-.mdc-tab-bar {
-  width: 50%;
-  margin-bottom: 1rem;
-}
-
-!* Make tabs smaller height so the Button and List sections remain the same height as the other sections *!
-.mdc-tab {
-  height: 36px;
-}
-*/
 
 /* Save URL */
 
@@ -402,7 +394,7 @@ header {
 
 #messages {
   margin: 20px;
-  width: 470px;
+  width: 480px;
 }
 
 #messages-buttons {
