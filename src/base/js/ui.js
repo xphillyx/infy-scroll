@@ -82,6 +82,10 @@ var MDC = {
     return [el.id, new mdc.checkbox.MDCCheckbox(el)];
   })),
 
+  chipsets: new Map([].map.call(document.querySelectorAll('.mdc-chip-set'), function(el) {
+    return [el.id, new mdc.chips.MDCChipSet(el)];
+  })),
+
   chips: new Map([].map.call(document.querySelectorAll('.mdc-chip'), function(el) {
     return [el.id, new mdc.chips.MDCChip(el)];
   })),

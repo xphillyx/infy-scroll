@@ -63,7 +63,7 @@ html, body {
 /* Drawer */
 
 .mdc-drawer {
-  width: 215px;
+  width: 210px;
 }
 
 .mdc-drawer__header {
@@ -90,7 +90,7 @@ html, body {
 #drawer-mascot {
   position: absolute;
   margin-left: -16px;
-  margin-top: -14px;
+  margin-top: -4px;
 }
 
 main {
@@ -361,7 +361,7 @@ header {
 /* Switches */
 
 #setup #switches {
-  margin-left: 180px;
+  margin-left: 150px;
 }
 
 #setup #switches > div:not(:last-child) {

@@ -6,7 +6,7 @@
 - Add in the Import/Export Saved URLs feature as suggested by LP. Want to wait a bit on this one because we may want to trim the saves first to only the parameters they need. Maybe when Infy gets out of beta
 
 ## Version 0.5
-<b>Released on 11/?/2020</b>
+<b>Released on 11/20/2020</b>
 - *Consolidated Actions. Combined the Next and Prev actions together and the Increment and Decrement actions together
 - Now displaying the Database URL and Saved URL to the icon titles in the button controls when you hover over them
 - Added a way to turn off UI messages when the message appears in the Popup. Now shows OK and Don't show this again
