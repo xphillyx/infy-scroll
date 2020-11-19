@@ -498,6 +498,7 @@ input[type="number"]:hover, input[type="number"]:focus {
 /* Shared Popup / Options Styling */
 
 .mascot {
+  width: 231px;
   height: 380px;
   z-index: 2147483647;
 }

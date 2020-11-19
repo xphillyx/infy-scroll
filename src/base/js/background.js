@@ -31,7 +31,8 @@ var Background = (() => {
     "autoTimes": 10, "autoSeconds": 2, "autoBadge": "times", "autoSlideshow": false, "autoBehavior": "smooth", "autoStart": false,
     "scrollAction": "next", "scrollAppend": "page", "scrollElementRule": "body > *", "scrollElementInsertRule": "", "scrollElementType": "selector", "scrollMediaType": "image",
     "scrollDetection": "sl", "scrollDetectionThrottle": 200, "scrollBehavior": "auto", "scrollUpdateAddress": true, "scrollUpdateTitle": true,
-    "scrollAppendThresholdPages": 0, "scrollAppendThresholdPixels": 500, "scrollAppendDelay": 2000, "scrollAppendScripts": false, "scrollAppendStyles": false, "scrollDivider": "element", "scrollDividerAlign": "center", "scrollOverlay": false, "scrollIcon": true, "scrollLoading": true,
+    "scrollAppendThresholdPages": 0, "scrollAppendThresholdPixels": 500, "scrollAppendDelay": 2000, "scrollAppendScripts": false, "scrollAppendStyles": false,
+    "scrollDivider": "element", "scrollDividerAlign": "center", "scrollOverlay": false, "scrollIcon": true, "scrollLoading": true, "scrollWrapFirstPage": false,
     "saves": [], "whitelist": [], "whitelistEnabled": false, "database": [], "databaseDate": null, "databaseAutoActivate": true, "databaseAutoUpdate": 1, "databaseBlacklist": [], "databaseWhitelist": []
   };
 
@@ -240,15 +241,25 @@ var Background = (() => {
         }
         await Promisify.setItems({"saves": saves});
       }
-      // 0.5 Update: Two new options for scroll divider alignment and scroll icon
+      // 0.5 Update: Reset scrollAction due to Action consolidation. Two new options for scroll divider alignment and scroll icon
       if (details.previousVersion < "0.5") {
         console.log("installedListener() - updating to 0.4...");
         const items = await Promisify.getItems();
-        // Add new storage items for two options
+        // Reset scrollAction and add new storage items for two options
         await Promisify.setItems({
+          "scrollAction": STORAGE_DEFAULT_VALUES.scrollAction,
           "scrollDividerAlign": STORAGE_DEFAULT_VALUES.scrollDividerAlign,
           "scrollIcon": STORAGE_DEFAULT_VALUES.scrollIcon
         });
+        // Change saves that use Decrement action to Increment with a negative interval due to action consolidation
+        const saves = items && items.saves && items.saves.length > 0 ? items.saves : [];
+        for (const save of saves) {
+          if (save && save.scrollAction === "decrement") {
+            save.scrollAction = "increment";
+            save.interval = -save.interval;
+          }
+        }
+        await Promisify.setItems({"saves": saves});
       }
     }
     startupListener();

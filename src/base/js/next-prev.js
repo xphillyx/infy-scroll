@@ -266,8 +266,7 @@ var NextPrev = (() => {
         urls[type].startsWith.set(keyword, value);
       } else if (text.endsWith(keyword)) {
         urls[type].endsWith.set(keyword, value);
-      }
-      else if (text.includes(keyword)) {
+      } else if (text.includes(keyword)) {
         urls[type].includes.set(keyword, value);
       }
     }
@@ -325,7 +324,8 @@ var NextPrev = (() => {
       if (filenameAndExtension.includes(".")) {
         const extension = filenameAndExtension.toLowerCase().split('.').pop();
         console.log("isValidExtension() - extension=" + extension);
-        if (extension === "css" || extension === "js") {
+        const invalidExtensions = ["css", "js"];
+        if (invalidExtensions.includes(extension)) {
           valid = false;
           details.error = "invalid extension:" + extension;
         }
