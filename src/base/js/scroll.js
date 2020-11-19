@@ -52,8 +52,8 @@ var Scroll = Scroll || (() => {
    * @param timeouts     the reusable timeouts object that stores all named timeouts used on this page
    * @param observer     the intersection observer
    */
-  const PAGE_STYLE = "display: block; visibility: visible; float: none; clear: both; width: auto; height: auto; background: initial; border: 0; border-radius: 0; margin: 0 0 2rem 0; padding: 0; z-index: 2147483647;";
-  const IFRAME_STYLE = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0; border-radius: 0; margin: 0 0 2rem 0; padding: 0; z-index: 2147483647; overflow: hidden;";
+  const PAGE_STYLE = "display: block; visibility: visible; float: none; clear: both; width: auto; height: auto; background: initial; border: 0; border-radius: 0; margin: 2rem 0 0 0; padding: 0; z-index: 2147483647;";
+  const IFRAME_STYLE = "display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0; border-radius: 0; margin: 2rem 0 0 0; padding: 0; z-index: 2147483647; overflow: hidden;";
   const MEDIA_STYLE = "display: flex; visibility: visible; float: none; clear: both; width: auto; height: auto; background: initial; border: 0; border-radius: 0; margin: 2rem auto; padding: 0; z-index: 2147483647;";
   const COLOR = "#55555F";
   let instance;
@@ -448,11 +448,6 @@ var Scroll = Scroll || (() => {
     page.style = PAGE_STYLE;
     document.body.appendChild(page);
     const nextDocument = await getNextDocument();
-    // TODO: Look at this some more...
-    if (!nextDocument) {
-      appendFinally("page", undefined, caller);
-      return;
-    }
     const fragment = document.createDocumentFragment();
     nextDocument.body.querySelectorAll(":scope > *").forEach(element => fragment.appendChild(element));
     page.appendChild(fragment);
@@ -529,11 +524,6 @@ var Scroll = Scroll || (() => {
   async function appendElement(caller) {
     console.log("appendElement() - caller=" + caller + ", instance.url=" + instance.url + ", pages.length=" + (pages.length + 1));
     const nextDocument = await getNextDocument();
-    // TODO: Look at this some more...
-    if (!nextDocument) {
-      appendFinally("element", undefined, caller);
-      return;
-    }
     const fragment = document.createDocumentFragment();
     const elements = getElements(nextDocument);
     elements.forEach(element => fragment.appendChild(element));
@@ -734,12 +724,8 @@ var Scroll = Scroll || (() => {
     console.log("getNextDocument() - documentContentType=" + instance.documentContentType + ", documentCharacterSet=" + instance.documentCharacterSet);
     let nextDocument;
     try {
+      // Note: Do not check or trust response.ok or response.status === 404 and return assuming there's no next document. Some websites intentionally or mistakenly return bad error codes even though the site is live
       const response = await fetch(instance.url, {method: "GET", credentials: "same-origin"});
-      // TODO: Investigate and see if a 404 can still happen even if response.ok is true (I think it can)
-      if (!response.ok && (instance.scrollAction === "next" || instance.scrollAction === "prev")) {
-        console.log("getNextDocument() - returning early because response.ok=" + response.ok);
-        return undefined;
-      }
       const arrayBuffer = await response.arrayBuffer();
       const dataView = new DataView(arrayBuffer);
       const decoder = new TextDecoder(instance.documentCharacterSet);
@@ -1293,11 +1279,12 @@ var Scroll = Scroll || (() => {
           }
           elements.forEach(el => {
             el.style.objectFit = "scale-down";
-            const maxWidth = gwindow.getComputedStyle(el).maxWidth;
-            console.log("resizeMedia() - window.getComputedStyle().maxWidth=" + maxWidth);
+            // const maxWidth = gwindow.getComputedStyle(el).maxWidth;
+            const computedStyle = gwindow.getComputedStyle(el);
+            console.log("resizeMedia() - window.getComputedStyle().maxWidth=" + computedStyle.maxWidth);
             // Note: We only set the max-width to 100% if there isn't one already set (e.g. it could be that an element already has a smaller max-width set, and we don't want to disturb this)
-            // TODO: This still sometimes set some images smaller than they have to be, e.g. images that are occupying a space bigger than 100% in tables
-            if (!maxWidth || maxWidth.toLowerCase() === "none") {
+            // TODO: This still sometimes set some images smaller than they have to be, e.g. images that are occupying a space bigger than 100% in tables. For this reason, we will only look at big images until we can come up with a better solution (>300px)
+            if ((!computedStyle.maxWidth || computedStyle.maxWidth.toLowerCase() === "none") && (computedStyle.width && computedStyle.width >= 300)) {
               el.style.maxWidth = "100%";
             }
           });

@@ -17,7 +17,7 @@ var Background = (() => {
   // The storage default values. Note: Storage.set can only set top-level JSON objects, avoid using nested JSON objects (instead, prefix keys that should be grouped together with a label e.g. "auto")
   const STORAGE_DEFAULT_VALUES = {
     "installVersion": chrome.runtime.getManifest().version, "installDate": new Date().toJSON(), "firstRun": true, "on": true,
-    "toolbarIcon": "dark", "buttonSize": 50, "interfaceImage": "infy", "interfaceMessages": true,
+    "toolbarIcon": "dark", "buttonSize": 40, "interfaceImage": "infy", "interfaceMessages": true,
     "customScriptsEnabled": true, "resizeMediaEnabled": true, "decodeURIEnabled": false, "debugEnabled": false,
     "interval": 1, "leadingZerosPadByDetection": true, "shuffleLimit": 100, "shuffleStart": false,
     "base": 10, "baseCase": "lowercase", "baseDateFormat": "yyyy/mm/dd", "baseRoman": "latin", "baseCustom": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -25,8 +25,8 @@ var Background = (() => {
     "errorSkip": 0, "errorCodes": ["404", "3XX"], "errorCodesCustom": [],
     "nextType": "selector", "nextSelector": "[rel=\"next\"]", "nextXpath": "//*[@rel=\"next\"]", "nextAttribute": ["href"],
     "prevType": "selector", "prevSelector": "[rel=\"prev\"],[rel=\"previous\"]", "prevXpath": "//*[@rel=\"prev\"]|//*[@rel=\"previous\"]", "prevAttribute": ["href"],
-    "nextKeywords": ["pnnext","nextpage","next-page","next_page","next>","next›","next→","next»","next","moreresults","olderposts","olderpost","arrow-right","angle-right","chevron-right","caret-right","circle-right","square-right","下一页","次のページ","次","&gt;",">","›","→","»","-right","_right","older","forward"],
-    "prevKeywords": ["pnprev","previouspage","prevpage","prev-page","prev_page","<prev","‹prev","←prev","«prev","prev","previous","newerposts","newerpost","arrow-left","angle-left","chevron-left","caret-left","circle-left","square-left","上一页","前のページ","前","&lt;","<","‹","←","«","-left","_left","newer"],
+    "nextKeywords": ["pnnext","nextpage","next-page","next_page","next>","next›","next→","next»","next","moreresults","olderposts","olderpost","arrow-right","angle-right","chevron-right","caret-right","circle-right","square-right","下一页","次のページ","次","&gt;",">","›","→","»","older","forward"],
+    "prevKeywords": ["pnprev","previouspage","prevpage","prev-page","prev_page","<prev","‹prev","←prev","«prev","prev","previous","newerposts","newerpost","arrow-left","angle-left","chevron-left","caret-left","circle-left","square-left","上一页","前のページ","前","&lt;","<","‹","←","«","newer","backward"],
     "buttonType": "selector", "buttonRule": "#load-more-button", "buttonMethod": "click", "buttonScrollPixels": 1000,
     "autoTimes": 10, "autoSeconds": 2, "autoBadge": "times", "autoSlideshow": false, "autoBehavior": "smooth", "autoStart": false,
     "scrollAction": "next", "scrollAppend": "page", "scrollElementRule": "body > *", "scrollElementInsertRule": "", "scrollElementType": "selector", "scrollMediaType": "image",
