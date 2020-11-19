@@ -67,6 +67,8 @@ var UI = (() => {
 /**
  * MDC is a global variable that contains all the Material Design Components that are being used.
  * Each component is stored in a Map with its DOM ID as the key and the component as the value.
+ *
+ * Note: The chipsets is needed even though we only listen for clicks on the chips.
  */
 var MDC = {
 
