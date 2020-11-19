@@ -167,9 +167,9 @@ var NextPrev = (() => {
         }
         if (isValidURL(url, details)) {
           // Check parent element. Sometimes the anchor is wrapped inside another element (like a li) with the keyword
-          if (element && element.parentNode) {
-            checkElement(urls, keywords, url, elementName, element.parentNode, "parent");
-          }
+          // if (element && element.parentNode) {
+          //   checkElement(urls, keywords, url, elementName, element.parentNode, "parent");
+          // }
           // Check children (innerHTML)
           // if (element && element.children && element.children.length > 0) {
           //   checkChildElements(urls, keywords, url, elementName, element.children, 1);
@@ -266,7 +266,8 @@ var NextPrev = (() => {
         urls[type].startsWith.set(keyword, value);
       } else if (text.endsWith(keyword)) {
         urls[type].endsWith.set(keyword, value);
-      } else if (text.includes(keyword)) {
+      }
+      else if (text.includes(keyword)) {
         urls[type].includes.set(keyword, value);
       }
     }
